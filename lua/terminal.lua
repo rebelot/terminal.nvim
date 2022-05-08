@@ -1,4 +1,5 @@
 local terminal = require("terminal.terminal")
+local active_terminals = require("terminal.active_terminals")
 local utils = require("terminal.utils")
 local ui = require("terminal.ui")
 
@@ -17,7 +18,7 @@ local function init_autocmds()
     })
     vim.api.nvim_create_autocmd({ "TermClose" }, {
         callback = function(params)
-            terminal.on_term_close(params.buf)
+            terminal:on_term_close(params.buf)
         end,
         group = au_id,
         desc = "on_term_close",
@@ -41,7 +42,7 @@ function M.cycle_next()
     if not utils.cur_buf_is_term() then
         return
     end
-    local terminals = terminal.get_sorted_active_terminals()
+    local terminals = active_terminals:get_sorted_terminals()
     local index = get_current_term_index(terminals)
     if index + 1 > #terminals then
         index = 0
@@ -53,7 +54,7 @@ function M.cycle_prev()
     if not utils.cur_buf_is_term() then
         return
     end
-    local terminals = terminal.get_sorted_active_terminals()
+    local terminals = active_terminals:get_sorted_terminals()
     local index = get_current_term_index(terminals)
     if index - 1 < 1 then
         index = #terminals + 1
@@ -74,7 +75,7 @@ end
 -- else, if tab has terminals, open (focus) the first one
 -- else, open the last terminal
 function M.open(index, layout)
-    local terminals = terminal.get_sorted_active_terminals()
+    local terminals = active_terminals:get_sorted_terminals()
 
     if not next(terminals) then
         -- if no active terminals, start a new one
@@ -102,19 +103,19 @@ end
 --- else, if current buffer is a terminal, close it
 --- else, close the first terminal in tab
 function M.close(index)
-    local tab_terminals = terminal:get_current_tab_terminals()
+    local tab_terminals = active_terminals:get_current_tab_terminals()
 
     if not next(tab_terminals) then
         return
     else
         if index then
-            local terminals = terminal.get_sorted_active_terminals()
+            local terminals = active_terminals:get_sorted_terminals()
             if index == 0 or index > #terminals then
                 vim.notify("Terminal: invalid terminal index " .. index, vim.log.levels.ERROR)
             end
             terminals[index]:close()
         else
-            local buf_term = terminal.get_current_buf_terminal()
+            local buf_term = active_terminals:get_current_buf_terminal()
             if buf_term then
                 buf_term:close()
             else
@@ -125,7 +126,7 @@ function M.close(index)
 end
 
 function M.toggle(index)
-    local tab_terminals = terminal:get_current_tab_terminals()
+    local tab_terminals = active_terminals:get_current_tab_terminals()
     if not next(tab_terminals) then
         M.open(index)
     else

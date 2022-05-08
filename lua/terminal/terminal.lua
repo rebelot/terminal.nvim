@@ -7,14 +7,12 @@
 
 local utils = require("terminal.utils")
 local ui = require("terminal.ui")
+local active_terminals = require("terminal.active_terminals")
 
 local defaults = {
     layout = { style = "split" },
     cmd = vim.o.shell,
 }
-
----@type table {jobid: number = terminal: Terminal}
-local active_terminals = {}
 
 ---@class Terminal
 ---@field cmd string
@@ -53,6 +51,7 @@ function Terminal:_spawn()
     local jobid = vim.fn.termopen(cmd, opts)
     if jobid > 0 then
         self.jobid = jobid
+        self.bufnr = vim.api.nvim_get_current_buf()
         active_terminals[jobid] = self
         return true
     end
@@ -96,32 +95,28 @@ end
 ---if |force| is true, a new window for the terminal will always be displayed.
 ---@param force boolean
 function Terminal:open(force)
-    local winid = self:get_current_tab_windows()[1]
+    local _, winid = next(self:get_current_tab_windows())
     if winid and not force then
         vim.api.nvim_set_current_win(winid)
         return
     end
 
-    local bufnr, new_winid = ui.make_buf_and_win(self.layout)
+    local new_bufnr, new_winid = ui.make_buf_and_win(self.layout)
 
     if not self:is_attached() then
-        self:_spawn()
-        self.bufnr = bufnr
+        local ok = self:_spawn()
+        if not ok then
+            vim.notify("Terminal: failed to spawn terminal job", vim.log.levels.ERROR)
+        end
     else
         vim.api.nvim_win_set_buf(new_winid, self.bufnr)
-        vim.api.nvim_buf_delete(bufnr, { force = true })
-    end
-
-    if not self:is_attached() then
-        print("something went wrong!")
-        vim.api.nvim_win_close(new_winid, true)
-        vim.api.nvim_buf_delete(bufnr, { force = true })
+        vim.api.nvim_buf_delete(new_bufnr, { force = true })
     end
 end
 
 ---Close the (first) terminal window in the current tab
 function Terminal:close()
-    local winid = self:get_current_tab_windows()[1]
+    local _, winid = next(self:get_current_tab_windows())
     if not winid then
         return
     end
@@ -145,9 +140,11 @@ function Terminal:kill()
     end
     self:close()
     vim.fn.jobstop(self.jobid)
-    vim.api.nvim_buf_delete(self.bufnr, {force = true})
+    vim.api.nvim_buf_delete(self.bufnr, { force = true })
     -- on_term_close will handle cleanup
 end
+
+--TODO: refactor autocommands and other class/staticmethods
 
 --- autocommand to intercept opened terminals
 --- that were not instances of Terminal
@@ -167,48 +164,12 @@ function Terminal:on_term_open(bufnr)
 end
 
 --- autocommand to ensure closed terminals are always removed from active_terminals
-function Terminal.on_term_close(bufnr)
+function Terminal:on_term_close(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
     local term = active_terminals[jobid]
     term.bufnr = nil
     term.jobid = nil
     active_terminals[jobid] = nil
-end
-
-function Terminal.get_sorted_active_terminals()
-    local terminals = {}
-    local keys = vim.tbl_keys(active_terminals)
-    table.sort(keys)
-    for _, key in ipairs(keys) do
-        table.insert(terminals, active_terminals[key])
-    end
-    return terminals
-end
-
-function Terminal.get_active_terminals()
-    return active_terminals
-end
-
-function Terminal.get_current_buf_terminal()
-    local jobid = vim.b.terminal_job_id
-    if not jobid then
-        return
-    end
-    return active_terminals[jobid]
-    -- local bufnr = vim.api.nvim_get_current_buf()
-    -- for _, term in ipairs(active_terminals) do
-    --     if term.bufnr == bufnr then
-    --         return term
-    --     end
-    -- end
-end
-
----Filter sorted active_terminals for the ones displayed in the current tab
----@return table Terminal
-function Terminal:get_current_tab_terminals()
-    return vim.tbl_filter(function(terminal)
-        return next(terminal:get_current_tab_windows()) ~= nil
-    end, self.get_sorted_active_terminals())
 end
 
 return Terminal
