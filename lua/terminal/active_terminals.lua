@@ -28,6 +28,19 @@ function mt:get_current_buf_terminal()
     -- end
 end
 
+function mt:get_current_buf_index()
+    local jobid = vim.b.terminal_job_id
+    if not jobid then
+        return
+    end
+    for i, term in ipairs(self:get_sorted_terminals()) do
+        if term.jobid == jobid then
+            return i
+        end
+    end
+end
+
+
 ---Filter sorted active_terminals for the ones displayed in the current tab
 ---@return table Terminal
 function mt:get_current_tab_terminals()
