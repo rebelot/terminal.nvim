@@ -66,8 +66,7 @@ function M.run(cmd, opts)
     opts = opts or {}
     cmd = cmd or vim.fn.input("Command: ", "", "shellcmd")
     opts.cmd = cmd ~= "" and cmd or nil
-    local term = terminal:new(opts)
-    term:open()
+    terminal:new(opts):open()
 end
 
 local function is_valid_index(index, max)
@@ -161,11 +160,28 @@ function M.kill(index)
 end
 
 function M.toggle(index)
-    local tab_terminals = active_terminals:get_current_tab_terminals()
-    if not next(tab_terminals) then
-        M.open(index)
+    local terminals = active_terminals:get_sorted_terminals()
+    if not next(terminals) then
+        M.open()
     else
-        M.close(index)
+        if index then
+            if not is_valid_index(index, #terminals) then
+                return
+            end
+            terminals[index]:toggle()
+        else
+            local buf_term = active_terminals:get_current_buf_terminal()
+            if buf_term then
+                buf_term:toggle()
+            else
+                local tab_terminals = active_terminals:get_current_tab_terminals()
+                if next(tab_terminals) then
+                    tab_terminals[1]:toggle()
+                else
+                    terminals[1]:toggle()
+                end
+            end
+        end
     end
 end
 
@@ -223,8 +239,6 @@ function M.operator_send()
 
     return M.send_opfunc()
 end
-
-vim.keymap.set({ "n", "x" }, "<leader>ts", M.operator_send, { expr = true })
 
 --TODO: use BufWinLeave <buffer> + nvim_win_set_buf
 --to freeze terminal buffer to window
