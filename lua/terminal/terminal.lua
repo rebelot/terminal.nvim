@@ -5,14 +5,12 @@
 -- Once the terminal is closed (the process is terminated),
 -- it is removed from the table.
 
+-- TODO: floating layout
+-- filetype/bufname/project_marker jobs
+
 local utils = require("terminal.utils")
 local ui = require("terminal.ui")
 local active_terminals = require("terminal.active_terminals")
-
-local defaults = {
-    layout = { style = "split" },
-    cmd = vim.o.shell,
-}
 
 ---@class Terminal
 ---@field cmd string
@@ -25,12 +23,13 @@ local defaults = {
 ---@field bufnr number
 ---@field job_id number
 ---@return Terminal
-local Terminal = {}
+local Terminal = {
+    layout = { style = "split" },
+    cmd = { vim.o.shell },
+}
 
 function Terminal:new(term)
     term = term or {}
-    term.layout = term.layout or defaults.layout
-    term.cmd = term.cmd or defaults.cmd
     setmetatable(term, { __index = self })
     return term
 end
@@ -49,6 +48,7 @@ function Terminal:_spawn()
         on_stderr = self.on_stderr,
     }
     local jobid = vim.fn.termopen(cmd, opts)
+    -- on_term_open runs now
     if jobid > 0 then
         self.jobid = jobid
         self.bufnr = vim.api.nvim_get_current_buf()
@@ -138,27 +138,47 @@ function Terminal:kill()
     if not self:is_attached() then
         return
     end
+    local confirm = vim.fn.input("Terminal: Kill terminal? y/n ", "")
+    if not confirm:match("^[yY][eE]?[sS]?$") then
+        return
+    end
     self:close()
     vim.fn.jobstop(self.jobid)
     vim.api.nvim_buf_delete(self.bufnr, { force = true })
     -- on_term_close will handle cleanup
 end
 
+local function add_newline(data)
+    if type(data) == "table" then
+        if not data[#data] == "" then
+            table.insert(data, "")
+        end
+    elseif type(data) == "string" then
+        if not data:sub(-1) == "\n" then
+            data = data .. "\n"
+        end
+    end
+    return data
+end
+
+function Terminal:send(data)
+    data = add_newline(data) -- make it configurable?
+    vim.fn.chansend(self.jobid, data)
+end
+
 --TODO: refactor autocommands and other class/staticmethods
 
 --- autocommand to intercept opened terminals
 --- that were not instances of Terminal
+--- _spawn() will override the new terminal.
 function Terminal:on_term_open(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
-    if active_terminals[jobid] then
-        return
-    end
-    local cmd = vim.b.term_title:gsub(".-/%d*:(.*)", "%1")
-    -- TODO: setting cmd using term_title could be risky
-    -- get window layout
+    local info = vim.api.nvim_get_chan_info(jobid)
+    local cmd = info.argv
+    -- get window layout ?
     active_terminals[jobid] = self:new({
-        jobid = jobid,
         cmd = cmd,
+        jobid = jobid,
         bufnr = bufnr,
     })
 end
