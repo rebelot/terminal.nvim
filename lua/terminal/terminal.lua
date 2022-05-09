@@ -5,8 +5,9 @@
 -- Once the terminal is closed (the process is terminated),
 -- it is removed from the table.
 
--- TODO: floating layout
--- filetype/bufname/project_marker jobs
+-- TODO!!!: target terminal
+-- TODO!:    floating layout
+-- TODO!!!: filetype/bufname/project_marker jobs
 
 local utils = require("terminal.utils")
 local ui = require("terminal.ui")
@@ -52,6 +53,7 @@ function Terminal:_spawn()
     if jobid > 0 then
         self.jobid = jobid
         self.bufnr = vim.api.nvim_get_current_buf()
+        self.title = vim.b.term_title
         active_terminals[jobid] = self
         return true
     end
@@ -138,7 +140,7 @@ function Terminal:kill()
     if not self:is_attached() then
         return
     end
-    local confirm = vim.fn.input("Terminal: Kill terminal? y/n ", "")
+    local confirm = vim.fn.input(string.format("Terminal: Kill terminal %s? [y/n]: ", self.title))
     if not confirm:match("^[yY][eE]?[sS]?$") then
         return
     end
@@ -173,6 +175,7 @@ end
 --- _spawn() will override the new terminal.
 function Terminal:on_term_open(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
+    local title = vim.b[bufnr].term_title
     local info = vim.api.nvim_get_chan_info(jobid)
     local cmd = info.argv
     -- get window layout ?
@@ -180,6 +183,7 @@ function Terminal:on_term_open(bufnr)
         cmd = cmd,
         jobid = jobid,
         bufnr = bufnr,
+        title = title
     })
 end
 
