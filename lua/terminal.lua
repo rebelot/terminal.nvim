@@ -29,17 +29,9 @@ function M.setup(config)
     init_autocmds()
 end
 
-local function get_current_term_index(terminals)
-    local bufnr = vim.api.nvim_get_current_buf()
-    for i, term in ipairs(terminals) do
-        if term.bufnr == bufnr then
-            return i
-        end
-    end
-end
-
 function M.cycle(step)
-    step = step or 1
+    step = (step and step ~= 0) and step or 1
+
     local terminals = active_terminals:get_sorted_terminals()
     local term
     if not terminals then
@@ -71,7 +63,7 @@ function M.run(cmd, opts)
 end
 
 local function is_valid_index(index, max)
-    if index == 0 or index > max then
+    if index > max then
         vim.notify("Terminal: invalid terminal index " .. index, vim.log.levels.ERROR)
         return false
     end
@@ -83,6 +75,7 @@ end
 -- else, if tab has terminals, open (focus) the first one
 -- else, open the last terminal
 function M.open(index, layout)
+    index = (index and index ~= 0) and index or nil
     local terminals = active_terminals:get_sorted_terminals()
 
     if not next(terminals) then
@@ -110,6 +103,7 @@ end
 --- else, if current buffer is a terminal, close it
 --- else, close the first terminal in tab
 function M.close(index)
+    index = (index and index ~= 0) and index or nil
     local tab_terminals = active_terminals:get_current_tab_terminals()
 
     if not next(tab_terminals) then
@@ -134,6 +128,7 @@ function M.close(index)
 end
 
 function M.kill(index)
+    index = (index and index ~= 0) and index or nil
     local terminals = active_terminals:get_sorted_terminals()
 
     if not next(terminals) then
@@ -161,6 +156,7 @@ function M.kill(index)
 end
 
 function M.toggle(index)
+    index = (index and index ~= 0) and index or nil
     local terminals = active_terminals:get_sorted_terminals()
     if not next(terminals) then
         M.open()
@@ -187,6 +183,7 @@ function M.toggle(index)
 end
 
 function M.send(index, data)
+    index = (index and index ~= 0) and index or nil
     local terminals = active_terminals:get_sorted_terminals()
     if not next(terminals) then
         return

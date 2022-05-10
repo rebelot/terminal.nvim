@@ -43,22 +43,6 @@ local function with_count(func)
     func(count)
 end
 
-function M.register_send(reg)
-    local mapfunc = function()
-    reg = reg or 't'
-        with_count(function(count)
-            vim.api.nvim_feedkeys('"' .. reg .. "y", "n", false)
-            local data = vim.fn.getreg(reg)
-            terminal.send(count, data)
-        end)
-    end
-    if reg then
-        return mapfunc
-    else
-        mapfunc()
-    end
-end
-
 function M.cycle_next()
     with_count(function(count)
         count = count or 1
@@ -91,6 +75,14 @@ end
 
 function M.run()
     terminal.run()
+end
+
+function M.send(data)
+    return function()
+        with_count(function(count)
+            terminal.send(count, data)
+        end)
+    end
 end
 
 return M
