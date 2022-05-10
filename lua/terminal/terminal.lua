@@ -78,6 +78,10 @@ function Terminal:get_windows()
     return {}
 end
 
+function Terminal:get_index()
+    return active_terminals:get_term_index(self)
+end
+
 ---Get the ids of window displaying the terminal in the current tab
 ---@return table window_ids
 --WARN: method is coupled with get_windows
@@ -150,21 +154,9 @@ function Terminal:kill()
     -- on_term_close will handle cleanup
 end
 
-local function add_newline(data)
-    if type(data) == "table" then
-        if not data[#data] == "" then
-            table.insert(data, "")
-        end
-    elseif type(data) == "string" then
-        if not data:sub(-1) == "\n" then
-            data = data .. "\n"
-        end
-    end
-    return data
-end
-
 function Terminal:send(data)
-    data = add_newline(data) -- make it configurable?
+    data = utils.unindent(data)
+    data = utils.add_newline(data) -- make it configurable?
     vim.fn.chansend(self.jobid, data)
 end
 
@@ -183,7 +175,7 @@ function Terminal:on_term_open(bufnr)
         cmd = cmd,
         jobid = jobid,
         bufnr = bufnr,
-        title = title
+        title = title,
     })
 end
 

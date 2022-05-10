@@ -28,13 +28,10 @@ function mt:get_current_buf_terminal()
     -- end
 end
 
-function mt:get_current_buf_index()
-    local jobid = vim.b.terminal_job_id
-    if not jobid then
-        return
-    end
-    for i, term in ipairs(self:get_sorted_terminals()) do
-        if term.jobid == jobid then
+function mt:get_term_index(term)
+    local terminals = self:get_sorted_terminals()
+    for i, t in ipairs(terminals) do
+        if t.jobid == term.jobid then
             return i
         end
     end

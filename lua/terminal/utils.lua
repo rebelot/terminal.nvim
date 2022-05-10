@@ -12,5 +12,25 @@ function M.cur_buf_is_term()
     return vim.b.terminal_job_id ~= nil
 end
 
+function M.add_newline(data)
+    if type(data) == "table" then
+        if data[#data] ~= "" then
+            table.insert(data, "")
+        end
+    elseif type(data) == "string" then
+        if data:sub(-1) ~= "\n" then
+            data = data .. "\n"
+        end
+    end
+    return data
+end
+
+function M.unindent(data)
+    if type(data) == "string" then
+        data = vim.fn.split(data, "\n")
+    end
+    return vim.tbl_map(vim.fn.trim, data)
+end
+
 
 return M

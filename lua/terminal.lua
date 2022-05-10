@@ -38,28 +38,29 @@ local function get_current_term_index(terminals)
     end
 end
 
-function M.cycle_next()
-    if not utils.cur_buf_is_term() then
+function M.cycle(step)
+    step = step or 1
+    local terminals = active_terminals:get_sorted_terminals()
+    local term
+    if not terminals then
+        return
+    else
+        local buf_term = active_terminals:get_current_buf_terminal()
+        if buf_term then
+            term = buf_term
+        else
+            local tab_terminals = active_terminals:get_current_tab_terminals()
+            if next(tab_terminals) then
+                term = tab_terminals[1]
+            end
+        end
+    end
+    if not term then
         return
     end
-    local terminals = active_terminals:get_sorted_terminals()
-    local index = get_current_term_index(terminals)
-    if index + 1 > #terminals then
-        index = 0
-    end
-    vim.api.nvim_win_set_buf(0, terminals[index + 1].bufnr)
-end
 
-function M.cycle_prev()
-    if not utils.cur_buf_is_term() then
-        return
-    end
-    local terminals = active_terminals:get_sorted_terminals()
-    local index = get_current_term_index(terminals)
-    if index - 1 < 1 then
-        index = #terminals + 1
-    end
-    vim.api.nvim_win_set_buf(0, terminals[index - 1].bufnr)
+    local index = (term:get_index() + step - 1) % #terminals + 1
+    vim.api.nvim_win_set_buf(0, terminals[index].bufnr)
 end
 
 function M.run(cmd, opts)
@@ -202,42 +203,6 @@ function M.send(index, data)
             end
         end
     end
-end
-
-local function get_marked_text(m1, m2)
-    local _, srow, scol, _ = unpack(vim.fn.getpos(m1))
-    local _, erow, ecol, _ = unpack(vim.fn.getpos(m2))
-
-    local start_row, start_col, end_row, end_col
-    if srow < erow or (srow == erow and scol <= ecol) then
-        start_row, start_col, end_row, end_col = srow - 1, scol - 1, erow - 1, ecol
-    else
-        start_row, start_col, end_row, end_col = erow - 1, ecol - 1, srow - 1, scol
-    end
-
-    local max_col = 2147483646
-    end_col = end_col <= max_col and end_col or max_col
-    start_col = start_col >= 0 and start_col or 0
-
-    return vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col, {})
-end
-
--- this was tough.
-function M.operator_send()
-    local index = vim.v.count ~= 0 and vim.v.count or nil
-    local mode = vim.fn.mode()
-
-    function M.send_opfunc(motion)
-        if not motion then
-            vim.o.operatorfunc = "v:lua.require'terminal'.send_opfunc"
-            return "g@"
-        end
-        local marks = mode == "V" and { "'<", "'>" } or { "'[", "']" }
-        local data = get_marked_text(unpack(marks))
-        M.send(index, data)
-    end
-
-    return M.send_opfunc()
 end
 
 --TODO: use BufWinLeave <buffer> + nvim_win_set_buf
