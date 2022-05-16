@@ -13,6 +13,14 @@ local utils = require("terminal.utils")
 local ui = require("terminal.ui")
 local active_terminals = require("terminal.active_terminals")
 
+local config
+
+local function get_config()
+    if not config then
+        config = require("terminal").get_config()
+    end
+end
+
 ---@class Terminal
 ---@field cmd string
 ---@field layout table
@@ -23,14 +31,20 @@ local active_terminals = require("terminal.active_terminals")
 ---@field on_stderr function
 ---@field bufnr number
 ---@field job_id number
+---@field autoclose boolean
 ---@return Terminal
 local Terminal = {
-    layout = { style = "split" },
-    cmd = { vim.o.shell },
+    layout = { open_cmd = "botright new" },
+    cmd = { vim.o.shell, "-l" },
+    autoclose = false,
 }
 
 function Terminal:new(term)
+    get_config()
     term = term or {}
+    term.layout = term.layout or config.layout
+    term.cmd = term.cmd or config.cmd
+    term.autoclose = term.autoclose or config.autoclose
     setmetatable(term, { __index = self })
     return term
 end
@@ -48,6 +62,17 @@ function Terminal:_spawn()
         on_stdout = self.on_stdout,
         on_stderr = self.on_stderr,
     }
+    -- vim.api.nvim_create_autocmd("TermOpen", {
+    --     pattern = '*',
+    --     callback = function(args)
+    --         print(args.match)
+    --         self.jobid = vim.b[args.buf].terminal_job_id
+    --         self.bufnr = args.buf
+    --         self.title = vim.b[args.buf].term_title
+    --         active_terminals[self.jobid] = self
+    --         return true
+    --     end,
+    -- })
     local jobid = vim.fn.termopen(cmd, opts)
     -- on_term_open runs now
     if jobid > 0 then
@@ -100,14 +125,14 @@ end
 ---if the terminal is already displayed, the first window containing it will be focused
 ---if |force| is true, a new window for the terminal will always be displayed.
 ---@param force boolean
-function Terminal:open(force)
+function Terminal:open(layout, force)
     local _, winid = next(self:get_current_tab_windows())
     if winid and not force then
         vim.api.nvim_set_current_win(winid)
         return
     end
-
-    local new_bufnr, new_winid = ui.make_buf_and_win(self.layout)
+    layout = layout or self.layout
+    local new_bufnr, new_winid = ui.make_buf_and_win(layout)
 
     if not self:is_attached() then
         local ok = self:_spawn()
@@ -126,16 +151,20 @@ function Terminal:close()
     if not winid then
         return
     end
-    vim.api.nvim_win_close(winid, true)
+    local ok, err = pcall(vim.api.nvim_win_close, winid, true) -- WARN: error won't block window closing
+    if not ok then
+        vim.notify("Terminal: " .. err, vim.log.levels.ERROR)
+        return
+    end
     self.winid = nil
 end
 
 ---Toggle terminal window
-function Terminal:toggle()
+function Terminal:toggle(layout, force)
     if next(self:get_current_tab_windows()) then
         self:close()
     else
-        self:open()
+        self:open(layout, force)
     end
 end
 
@@ -156,7 +185,8 @@ end
 
 function Terminal:send(data)
     data = utils.unindent(data)
-    data = utils.add_newline(data) -- make it configurable?
+    data = utils.skip_blank_lines(data)
+    data = utils.add_newline(data)
     vim.fn.chansend(self.jobid, data)
 end
 
@@ -186,6 +216,9 @@ function Terminal:on_term_close(bufnr)
     term.bufnr = nil
     term.jobid = nil
     active_terminals[jobid] = nil
+    if term.autoclose then
+        term:close()
+    end
 end
 
 return Terminal
