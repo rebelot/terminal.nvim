@@ -207,6 +207,7 @@ function Terminal:on_term_close(bufnr)
     local term = active_terminals[jobid]
     if term.autoclose then
         term:close()
+        vim.api.nvim_buf_delete(term.bufnr, { force = true })
     end
     term.bufnr = nil
     term.jobid = nil
