@@ -205,12 +205,12 @@ end
 function Terminal:on_term_close(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
     local term = active_terminals[jobid]
-    term.bufnr = nil
-    term.jobid = nil
-    active_terminals[jobid] = nil
     if term.autoclose then
         term:close()
     end
+    term.bufnr = nil
+    term.jobid = nil
+    active_terminals[jobid] = nil
 end
 
 return Terminal
