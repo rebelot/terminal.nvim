@@ -5,7 +5,7 @@ local M = {}
 
 M.terminal = terminal
 
--- TODO: target_term / mark terminal
+-- TODO: lock terminal windows?
 
 M.target_term = 0 -- use 0 as "smart target"
 
