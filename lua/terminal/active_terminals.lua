@@ -37,6 +37,9 @@ function mt:get_term_index(term)
     end
 end
 
+function mt:len()
+    return #vim.tbl_keys(self)
+end
 
 ---Filter sorted active_terminals for the ones displayed in the current tab
 ---@return table Terminal
@@ -45,7 +48,6 @@ function mt:get_current_tab_terminals()
         return next(terminal:get_current_tab_windows()) ~= nil
     end, self:get_sorted_terminals())
 end
-
 
 setmetatable(active_terminals, { __index = mt })
 

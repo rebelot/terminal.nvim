@@ -37,6 +37,24 @@ function M.operator_send()
     return M.send_opfunc()
 end
 
+function M.register_send(reg, data)
+    return function()
+        local index = vim.v.count ~= 0 and vim.v.count or nil
+        reg = reg or "t"
+
+        function M.send_opfunc(motion)
+            if not motion then
+                vim.o.operatorfunc = "v:lua.require'terminal.mappings'.send_opfunc"
+                return "g@"
+            end
+            vim.api.nvim_command('normal! `["' .. reg .. "y`]")
+            terminal.send(index, data or vim.fn.getreg(reg))
+        end
+
+        return M.send_opfunc()
+    end
+end
+
 local function with_count(func)
     local count = vim.v.count
     count = count ~= 0 and count or nil
@@ -57,11 +75,25 @@ function M.cycle_prev()
     end)
 end
 
-function M.toggle()
+function M.toggle(layout, force)
+    if layout then
+        return function()
+            with_count(function(count)
+                terminal.toggle(count, layout, force)
+            end)
+        end
+    end
     with_count(terminal.toggle)
 end
 
-function M.open()
+function M.open(layout, force)
+    if layout then
+        return function()
+            with_count(function(count)
+                terminal.open(count, layout, force)
+            end)
+        end
+    end
     with_count(terminal.open)
 end
 
@@ -73,7 +105,12 @@ function M.kill()
     with_count(terminal.kill)
 end
 
-function M.run()
+function M.run(cmd, opts)
+    if cmd or opts then
+        return function()
+            terminal.run(cmd, opts)
+        end
+    end
     terminal.run()
 end
 

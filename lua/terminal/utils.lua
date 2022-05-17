@@ -25,6 +25,15 @@ function M.add_newline(data)
     return data
 end
 
+function M.skip_blank_lines(data)
+    if type(data) == "string" then
+        data = vim.fn.split(data, "\n")
+    end
+    return vim.tbl_filter(function(line)
+        return line ~= ""
+    end, data)
+end
+
 function M.unindent(data)
     if type(data) == "string" then
         data = vim.fn.split(data, "\n")

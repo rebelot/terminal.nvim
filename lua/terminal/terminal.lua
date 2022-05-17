@@ -1,17 +1,9 @@
--- Create a Terminal object to manage a terminal emulator instance
--- spawned by neovim.
-
--- Once spawned, Termianl objects are stored in `active_terminals` table.
--- Once the terminal is closed (the process is terminated),
--- it is removed from the table.
-
--- TODO!!!: target terminal
--- TODO!:    floating layout
--- TODO!!!: filetype/bufname/project_marker jobs
-
 local utils = require("terminal.utils")
 local ui = require("terminal.ui")
 local active_terminals = require("terminal.active_terminals")
+
+-- TODO!:    floating layout
+-- TODO!!!: filetype/bufname/project_marker jobs
 
 local config
 
