@@ -76,7 +76,7 @@ function M.cycle_prev()
 end
 
 function M.toggle(layout, force)
-    if layout then
+    if layout or force then
         return function()
             with_count(function(count)
                 terminal.toggle(count, layout, force)

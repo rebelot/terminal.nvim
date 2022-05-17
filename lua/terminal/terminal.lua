@@ -47,7 +47,7 @@ function Terminal:_spawn()
     local cmd = self.cmd
     local opts = {
         detach = 1,
-        cwd = type(self.cwd) == 'function' and self:cwd() or self.cwd,
+        cwd = type(self.cwd) == "function" and self:cwd() or self.cwd,
         clear_env = self.clear_env,
         env = self.env,
         on_exit = self.on_exit,
@@ -66,6 +66,7 @@ function Terminal:_spawn()
     --     end,
     -- })
     local jobid = vim.fn.termopen(cmd, opts)
+
     -- on_term_open runs now
     if jobid > 0 then
         self.jobid = jobid

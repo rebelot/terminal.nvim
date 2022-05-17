@@ -48,6 +48,7 @@ function M.setup(config)
 end
 
 local function is_valid_index(index)
+    vim.pretty_print(index, active_terminals:len())
     if index > active_terminals:len() then
         vim.notify("Terminal: invalid terminal index " .. index, vim.log.levels.ERROR)
         return false
@@ -159,7 +160,7 @@ function M.toggle(index, layout, force)
     if term then
         term:toggle(layout, force)
     else
-        M.open(layout, force)
+        M.run(nil, { layout = layout })
     end
 end
 
