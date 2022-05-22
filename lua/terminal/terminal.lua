@@ -2,7 +2,6 @@ local utils = require("terminal.utils")
 local ui = require("terminal.ui")
 local active_terminals = require("terminal.active_terminals")
 
--- TODO!:    floating layout
 -- TODO!!!: filetype/bufname/project_marker jobs
 
 local config
@@ -24,13 +23,15 @@ end
 ---@field bufnr number
 ---@field job_id number
 ---@field autoclose boolean
----@return Terminal
 local Terminal = {
     layout = { open_cmd = "botright new" },
     cmd = { vim.o.shell, "-l" },
     autoclose = false,
 }
 
+---Instantiate a new terminal
+---@param term nil | table
+---@return Terminal
 function Terminal:new(term)
     get_config()
     term = term or {}
@@ -41,7 +42,7 @@ function Terminal:new(term)
     return term
 end
 
----spawn a new terminal: assign a jobid and append to active_terminals
+---Spawn a new terminal: assign a jobid and bufnr and insert it into active_terminals
 ---@return boolean
 function Terminal:_spawn()
     local cmd = self.cmd
@@ -96,6 +97,8 @@ function Terminal:get_windows()
     return {}
 end
 
+---Get the terminal's current index within the sorted active_terminals list
+---@return number
 function Terminal:get_index()
     return active_terminals:get_term_index(self)
 end
@@ -116,7 +119,9 @@ end
 ---Display the terminal in the current tab
 ---if the terminal was not spawned, it will be spawned
 ---if the terminal is already displayed, the first window containing it will be focused
----if |force| is true, a new window for the terminal will always be displayed.
+---if force is true, a new window for the terminal will always be displayed.
+---if layout is given, the terminal will be displayed in the given layout
+---@param layout table
 ---@param force boolean
 function Terminal:open(layout, force)
     local _, winid = next(self:get_current_tab_windows())
@@ -182,8 +187,6 @@ function Terminal:send(data)
     data = utils.add_newline(data)
     vim.fn.chansend(self.jobid, data)
 end
-
---TODO: refactor autocommands and other class/staticmethods
 
 --- autocommand to intercept opened terminals
 --- that were not instances of Terminal

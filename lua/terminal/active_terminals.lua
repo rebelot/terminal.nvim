@@ -1,9 +1,11 @@
-local utils = require("terminal.utils")
-
----@type table {jobid: number = terminal: Terminal}
-local active_terminals = {}
+---@class active_terminals
 local mt = {}
 
+---@type active_terminals
+local active_terminals = {}
+
+---Return a list of Terminal objects sorted by their job_id
+---@return table<Terminal>
 function mt:get_sorted_terminals()
     local terminals = {}
     local keys = vim.tbl_keys(self)
@@ -14,6 +16,8 @@ function mt:get_sorted_terminals()
     return terminals
 end
 
+---Get the terminal object in the current buffer
+---@return Terminal | nil
 function mt:get_current_buf_terminal()
     local jobid = vim.b.terminal_job_id
     if not jobid then
@@ -28,6 +32,9 @@ function mt:get_current_buf_terminal()
     -- end
 end
 
+---Get the index of a given terminal within the sorted active_terminals list
+---@param term Terminal
+---@return integer
 function mt:get_term_index(term)
     local terminals = self:get_sorted_terminals()
     for i, t in ipairs(terminals) do
@@ -37,12 +44,14 @@ function mt:get_term_index(term)
     end
 end
 
+---Get the length of the active_terminals list
+---@return integer
 function mt:len()
     return #vim.tbl_keys(self)
 end
 
 ---Filter sorted active_terminals for the ones displayed in the current tab
----@return table Terminal
+---@return Terminal
 function mt:get_current_tab_terminals()
     return vim.tbl_filter(function(terminal)
         return next(terminal:get_current_tab_windows()) ~= nil
