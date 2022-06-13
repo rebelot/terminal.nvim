@@ -41,7 +41,8 @@ Default config
 
 Specify the layout of the terminal window.
 
-Type: `table`\
+Type: `table`
+
 Default: `{ open_cmd = "botright new"}`
 
 `layout.open_cmd`:
@@ -58,14 +59,16 @@ screen space.
 
 Default command for new terminals
 
-Type: `table|string` passed to `termopen` (`:h jobstart()`)\
+Type: `table|string` passed to `termopen` (`:h jobstart()`)
+
 Default: `{ vim.o.shell }`
 
 #### config.autoclose
 
 Automatically close terminal window when the process exits (on `TermClose`).
 
-Type: `bool`\
+Type: `bool`
+
 Default: `false`
 
 ---
@@ -74,8 +77,9 @@ Default: `false`
 
 #### setup()
 
-Signature: `setup(config)`\
-params:
+`setup(config)`
+
+Params:
 
 - `config` (`table`): user configuration
 
@@ -84,8 +88,9 @@ A call to this function is always required.
 
 #### set_target()
 
-Signature: `set_target(index)`\
-params:
+`set_target(index)`
+
+Params:
 
 - `index` (`integer`): Terminal index.
 
@@ -93,8 +98,9 @@ Set the `index` terminal as the target for other actions.
 
 #### cycle()
 
-Signature: `cycle(step)`\
-params:
+`cycle(step)`
+
+Params:
 
 - `step` (`integer`): Increment number for cycling.
 
@@ -102,8 +108,9 @@ Cycle between active terminals.
 
 #### run()
 
-Signature: `run(cmd?, opts?)`\
-params:
+`run(cmd?, opts?)`
+
+Params:
 
 - `cmd` (`table|string`): command to be executed by the terminal.
 - `opts` (`table`): options to be passed to `termopen`
@@ -114,8 +121,9 @@ If `cmd` is an empty string, `config.cmd` will be used.
 
 #### open()
 
-Signature: `open(index, layout, force)`\
-params:
+`open(index, layout, force)`
+
+Params:
 
 - `index`(`integer`): terminal index
 - `layout` (`table`): layout spec
@@ -125,8 +133,9 @@ Open a terminal with given layout.
 
 #### close()
 
-Signature: `close(index)`\
-params:
+`close(index)`
+
+Params:
 
 - `index`(`integer`): terminal index
 
@@ -134,8 +143,9 @@ Close a terminal window.
 
 #### kill()
 
-Signature: `kill(index)`\
-params:
+`kill(index)`
+
+Params:
 
 - `index`(`integer`): terminal index
 
@@ -143,8 +153,9 @@ Kill a terminal job and close its window.
 
 #### toggle()
 
-Signature: `toggle(index, layout, force)`\
-params:
+`toggle(index, layout, force)`
+
+Params:
 
 - `index`(`integer`): terminal index
 - `layout` (`table`): layout spec
@@ -155,8 +166,9 @@ if it's visible in the current tab (unless `force` is `true`).
 
 #### send()
 
-Signature: `send(index, data)`\
-params:
+`send(index, data)`
+
+Params:
 
 - `index`(`integer`): terminal index
 - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
