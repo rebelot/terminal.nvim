@@ -80,8 +80,11 @@ FUNCTIONS                                            *terminal-nvim-functions*
 
                                                        *terminal-nvim-setup()*
 
-setup()                                Signature: `setup(config)` params: -
-                                       `config` (`table`): user configuration
+setup()                                Signature: `setup(config)` params:
+
+
+
+- `config` (`table`): user configuration
 
 
 Set up the plugin with user `config`. A call to this function is always
@@ -89,28 +92,34 @@ required.
 
                                                   *terminal-nvim-set_target()*
 
-set_target()                           Signature: `set_target(index)` params: -
-                                       `index` (`integer`): Terminal index.
+set_target()                           Signature: `set_target(index)` params:
+
+
+
+- `index` (`integer`): Terminal index.
 
 
 Set the `index` terminal as the target for other actions.
 
                                                        *terminal-nvim-cycle()*
 
-cycle()                                Signature: `cycle(step)` params: -
-                                       `step` (`integer`): Increment number for
-                                       cycling.
+cycle()                                Signature: `cycle(step)` params:
+
+
+
+- `step` (`integer`): Increment number for cycling.
 
 
 Cycle between active terminals.
 
                                                          *terminal-nvim-run()*
 
-run()                                  Signature: `run(cmd?, opts?)` params: -
-                                       `cmd` (`table|string`): command to be
-                                       executed by the terminal. - `opts`
-                                       (`table`): options to be passed to
-                                       `termopen`
+run()                                  Signature: `run(cmd?, opts?)` params:
+
+
+
+- `cmd` (`table|string`): command to be executed by the terminal.
+- `opts` (`table`): options to be passed to `termopen`
 
 
 Run a command in terminal with given options. If no command is provided, user
@@ -120,27 +129,35 @@ be used.
                                                         *terminal-nvim-open()*
 
 open()                                 Signature: `open(index, layout, force)`
-                                       params: - `index`(`integer`): terminal
-                                       index - `layout` (`table`): layout spec
-                                       - `force` (`bool`): Force opening the
-                                       terminal window even if it already
-                                       visible in the current tab.
+                                       params:
+
+
+
+- `index`(`integer`): terminal index
+- `layout` (`table`): layout spec
+- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
 
 Open a terminal with given layout.
 
                                                        *terminal-nvim-close()*
 
-close()                                Signature: `close(index)` params: -
-                                       `index`(`integer`): terminal index
+close()                                Signature: `close(index)` params:
+
+
+
+- `index`(`integer`): terminal index
 
 
 Close a terminal window.
 
                                                         *terminal-nvim-kill()*
 
-kill()                                 Signature: `kill(index)` params: -
-                                       `index`(`integer`): terminal index
+kill()                                 Signature: `kill(index)` params:
+
+
+
+- `index`(`integer`): terminal index
 
 
 Kill a terminal job and close its window.
@@ -148,11 +165,13 @@ Kill a terminal job and close its window.
                                                       *terminal-nvim-toggle()*
 
 toggle()                               Signature: `toggle(index, layout,
-                                       force)` params: - `index`(`integer`):
-                                       terminal index - `layout` (`table`):
-                                       layout spec - `force` (`bool`): Force
-                                       opening the terminal window even if it
-                                       already visible in the current tab.
+                                       force)` params:
+
+
+
+- `index`(`integer`): terminal index
+- `layout` (`table`): layout spec
+- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
 
 Open a terminal with given layout, or close its window if it’s visible in the
@@ -160,10 +179,12 @@ current tab (unless `force` is `true`).
 
                                                         *terminal-nvim-send()*
 
-send()                                 Signature: `send(index, data)` params: -
-                                       `index`(`integer`): terminal index -
-                                       `data` (`table|string`): Text to be sent
-                                       to the terminal via `chansend()`
+send()                                 Signature: `send(index, data)` params:
+
+
+
+- `index`(`integer`): terminal index
+- `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
 
 ------------------------------------------------------------------------------
