@@ -75,7 +75,8 @@ Default: `false`
 #### setup()
 
 Signature: `setup(config)`\
-params:\
+params:
+
 - `config` (`table`): user configuration
 
 Set up the plugin with user `config`.
@@ -84,7 +85,8 @@ A call to this function is always required.
 #### set_target()
 
 Signature: `set_target(index)`\
-params:\
+params:
+
 - `index` (`integer`): Terminal index.
 
 Set the `index` terminal as the target for other actions.
@@ -92,7 +94,8 @@ Set the `index` terminal as the target for other actions.
 #### cycle()
 
 Signature: `cycle(step)`\
-params:\
+params:
+
 - `step` (`integer`): Increment number for cycling.
 
 Cycle between active terminals.
@@ -100,7 +103,8 @@ Cycle between active terminals.
 #### run()
 
 Signature: `run(cmd?, opts?)`\
-params:\
+params:
+
 - `cmd` (`table|string`): command to be executed by the terminal.
 - `opts` (`table`): options to be passed to `termopen`
 
@@ -111,7 +115,8 @@ If `cmd` is an empty string, `config.cmd` will be used.
 #### open()
 
 Signature: `open(index, layout, force)`\
-params:\
+params:
+
 - `index`(`integer`): terminal index
 - `layout` (`table`): layout spec
 - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
@@ -121,7 +126,8 @@ Open a terminal with given layout.
 #### close()
 
 Signature: `close(index)`\
-params:\
+params:
+
 - `index`(`integer`): terminal index
 
 Close a terminal window.
@@ -129,7 +135,8 @@ Close a terminal window.
 #### kill()
 
 Signature: `kill(index)`\
-params:\
+params:
+
 - `index`(`integer`): terminal index
 
 Kill a terminal job and close its window.
@@ -137,7 +144,8 @@ Kill a terminal job and close its window.
 #### toggle()
 
 Signature: `toggle(index, layout, force)`\
-params:\
+params:
+
 - `index`(`integer`): terminal index
 - `layout` (`table`): layout spec
 - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
@@ -148,7 +156,8 @@ if it's visible in the current tab (unless `force` is `true`).
 #### send()
 
 Signature: `send(index, data)`\
-params:\
+params:
+
 - `index`(`integer`): terminal index
 - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
