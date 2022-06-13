@@ -50,6 +50,7 @@ Default: `{ open_cmd = "botright new" }`
 Vim command used to create the new buffer and window.
 
 ##### Float Layout:
+
 When `open_cmd = "float"`, `layout.height` and `layout.width`
 are used to determine the height and width of the floating
 window. Values `<= 1` are interpreted as percentage of
@@ -250,7 +251,7 @@ Set terminal with [count] index as target for terminal actions.
 
 ## Named Terminals
 
-#### IPYTHON:
+#### IPython:
 
 ```lua
 local ipython = require("terminal").terminal:new({
@@ -277,7 +278,7 @@ vim.api.nvim_create_user_command("IPython", function()
 end, {})
 ```
 
-#### LAZYGIT:
+#### Lazygit:
 
 ```lua
 local lazygit = require("terminal").terminal:new({
