@@ -13,16 +13,17 @@ local function get_config()
 end
 
 ---@class Terminal
----@field cmd string
 ---@field layout table
+---@field bufnr number
+---@field job_id number
+---@field autoclose boolean
+---@field cmd string
 ---@field clear_env boolean
+---@field cwd string | function
 ---@field env table
 ---@field on_exit function
 ---@field on_stdout function
 ---@field on_stderr function
----@field bufnr number
----@field job_id number
----@field autoclose boolean
 local Terminal = {
     layout = { open_cmd = "botright new" },
     cmd = { vim.o.shell, "-l" },
@@ -121,8 +122,8 @@ end
 ---if the terminal is already displayed, the first window containing it will be focused
 ---if force is true, a new window for the terminal will always be displayed.
 ---if layout is given, the terminal will be displayed in the given layout
----@param layout table
----@param force boolean
+---@param layout table?
+---@param force boolean?
 function Terminal:open(layout, force)
     local _, winid = next(self:get_current_tab_windows())
     if winid and not force then
@@ -143,7 +144,7 @@ function Terminal:open(layout, force)
     end
 end
 
----Close the (first) terminal window in the current tab
+---Close the (first) window in the current tab displaying the terminal
 function Terminal:close()
     local _, winid = next(self:get_current_tab_windows())
     if not winid then
@@ -158,6 +159,8 @@ function Terminal:close()
 end
 
 ---Toggle terminal window
+---@param layout table?
+---@param force boolean?
 function Terminal:toggle(layout, force)
     if next(self:get_current_tab_windows()) then
         self:close()
@@ -181,6 +184,8 @@ function Terminal:kill()
     -- on_term_close will handle cleanup
 end
 
+---Send data to the terminal
+---@param data string | table<string>
 function Terminal:send(data)
     data = utils.unindent(data)
     data = utils.skip_blank_lines(data)
@@ -188,11 +193,15 @@ function Terminal:send(data)
     vim.fn.chansend(self.jobid, data)
 end
 
---- autocommand to intercept opened terminals
---- that were not instances of Terminal
---- _spawn() will override the new terminal.
+---Autocommand to intercept opened terminals
+---that were not instances of Terminal
+---_spawn() will override the new terminal.
+---@param bufnr integer
 function Terminal:on_term_open(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
+    if not jobid then
+        return
+    end
     local title = vim.b[bufnr].term_title
     local info = vim.api.nvim_get_chan_info(jobid)
     local cmd = info.argv
@@ -205,7 +214,8 @@ function Terminal:on_term_open(bufnr)
     })
 end
 
---- autocommand to ensure closed terminals are always removed from active_terminals
+---autocommand to ensure closed terminals are always removed from active_terminals
+---@param bufnr integer
 function Terminal:on_term_close(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
     local term = active_terminals[jobid]
