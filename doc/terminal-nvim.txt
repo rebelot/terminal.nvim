@@ -50,15 +50,17 @@ config.layout                          Specify the layout of the terminal
 
 Type: `table`
 
-Default: `{ open_cmd = "botright new"}`
+Default: `{ open_cmd = "botright new" }`
 
-`layout.open_cmd`:
+CONFIG.LAYOUT.OPEN_CMD:
 
 Vim command used to create the new buffer and window.
 
-Float Layout: When `open_cmd = "float"`, `layout.height` and `layout.width` are
-used to determine the height and width of the floating window. Values `<= 1`
-are interpreted as percentage of screen space.
+FLOAT LAYOUT:
+
+When `open_cmd = "float"`, `layout.height` and `layout.width` are used to
+determine the height and width of the floating window. Values `<= 1` are
+interpreted as percentage of screen space.
 
                                                     *terminal-nvim-config.cmd*
 
@@ -294,7 +296,7 @@ Set terminal with [count] index as target for terminal actions.
 
 NAMED TERMINALS                                *terminal-nvim-named-terminals*
 
-IPYTHON:
+                                                      *terminal-nvim-IPYTHON:*
 
 >
     local ipython = require("terminal").terminal:new({
@@ -322,7 +324,7 @@ IPYTHON:
 <
 
 
-LAZYGIT:
+                                                      *terminal-nvim-LAZYGIT:*
 
 >
     local lazygit = require("terminal").terminal:new({
