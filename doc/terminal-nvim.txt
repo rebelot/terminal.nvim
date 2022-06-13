@@ -39,9 +39,11 @@ Default config
 <
 
 
-CONFIG.LAYOUT ~
+                                                 *terminal-nvim-config.layout*
 
-Specify the layout of the terminal window.
+config.layout                          Specify the layout of the terminal
+                                       window.
+
 
 Type: `table`
 
@@ -55,17 +57,20 @@ Float Layout: When `open_cmd = "float"`, `layout.height` and `layout.width` are
 used to determine the height and width of the floating window. Values `<= 1`
 are interpreted as percentage of screen space.
 
-CONFIG.CMD ~
+                                                    *terminal-nvim-config.cmd*
 
-Default command for new terminals
+config.cmd                             Default command for new terminals
+
 
 Type: `table|string` passed to `termopen` (`:h jobstart()`)
 
 Default: `{ vim.o.shell }`
 
-CONFIG.AUTOCLOSE ~
+                                              *terminal-nvim-config.autoclose*
 
-Automatically close terminal window when the process exits (on `TermClose`).
+config.autoclose                       Automatically close terminal window when
+                                       the process exits (on `TermClose`).
+
 
 Type: `bool`
 
@@ -73,9 +78,10 @@ Default: `false`
 
 FUNCTIONS                                            *terminal-nvim-functions*
 
-SETUP() ~
+                                                       *terminal-nvim-setup()*
 
-Signature: `setup(config)`
+setup()                                Signature: `setup(config)`
+
 
 params:
 
@@ -86,9 +92,10 @@ params:
 Set up the plugin with user `config`. A call to this function is always
 required.
 
-SET_TARGET() ~
+                                                  *terminal-nvim-set_target()*
 
-Signature: `set_target(index)`
+set_target()                           Signature: `set_target(index)`
+
 
 Set the `index` terminal as the target for other actions.
 
@@ -98,9 +105,10 @@ params:
 - `index` (`integer`): Terminal index.
 
 
-CYCLE() ~
+                                                       *terminal-nvim-cycle()*
 
-Signature: `cycle(step)`
+cycle()                                Signature: `cycle(step)`
+
 
 params:
 
@@ -108,9 +116,10 @@ params:
 
 Cycle between active terminals.
 
-RUN() ~
+                                                         *terminal-nvim-run()*
 
-Signature: `run(cmd?, opts?)`
+run()                                  Signature: `run(cmd?, opts?)`
+
 
 params:
 
@@ -123,9 +132,10 @@ Run a command in terminal with given options. If no command is provided, user
 will be prompted to insert one; If `cmd` is an empty string, `config.cmd` will
 be used.
 
-OPEN() ~
+                                                        *terminal-nvim-open()*
 
-Signature: `open(index, layout, force)`
+open()                                 Signature: `open(index, layout, force)`
+
 
 params:
 
@@ -135,9 +145,10 @@ current tab.
 
 Open a terminal with given layout.
 
-CLOSE() ~
+                                                       *terminal-nvim-close()*
 
-Signature: `close(index)`
+close()                                Signature: `close(index)`
+
 
 params:
 
@@ -147,9 +158,10 @@ params:
 
 Close a terminal window.
 
-KILL() ~
+                                                        *terminal-nvim-kill()*
 
-Signature: `kill(index)`
+kill()                                 Signature: `kill(index)`
+
 
 params:
 
@@ -159,9 +171,11 @@ params:
 
 Kill a terminal job and close its window.
 
-TOGGLE() ~
+                                                      *terminal-nvim-toggle()*
 
-Signature: `toggle(index, layout, force)`
+toggle()                               Signature: `toggle(index, layout,
+                                       force)`
+
 
 params:
 
@@ -174,9 +188,10 @@ params:
 Open a terminal with given layout, or close its window if it’s visible in the
 current tab (unless `force` is `true`).
 
-SEND() ~
+                                                        *terminal-nvim-send()*
 
-Signature: `send(index, data)`
+send()                                 Signature: `send(index, data)`
+
 
 params:
 
@@ -187,30 +202,32 @@ params:
 
 COMMANDS                                              *terminal-nvim-commands*
 
-TERMRUN ~
+                                                       *terminal-nvim-TermRun*
 
-:TermRun[!] [command]
+TermRun                                :TermRun[!] [command]
+
 
 Run [command] in terminal. If command is empty, user will be prompted to enter
 one, falling back to `config.cmd`. With [!] the new terminal window will
 replace the current buffer.
 
-TERMOPEN ~
+                                                      *terminal-nvim-TermOpen*
 
-:TermOpen[!] [count]
+TermOpen                               :TermOpen[!] [count]
+
 
 Open terminal with [count] index. With [!], a new window will be created even
 if the terminal is already displayed in the current tab.
 
-TERMCLOSE ~
+                                                     *terminal-nvim-TermClose*
 
-TERMTOGGLE ~
+                                                    *terminal-nvim-TermToggle*
 
-TERMKILL ~
+                                                      *terminal-nvim-TermKill*
 
-TERMSEND ~
+                                                      *terminal-nvim-TermSend*
 
-TERMSETTARGET ~
+                                                 *terminal-nvim-TermSetTarget*
 
 NAMED TERMINALS                                *terminal-nvim-named-terminals*
 
