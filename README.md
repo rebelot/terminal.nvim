@@ -35,7 +35,7 @@ Default config
 }
 ```
 
-### config.layout
+#### config.layout
 
 Specify the layout of the terminal window.
 
@@ -53,7 +53,7 @@ are used to determine the height and width of the floating
 window. Values `<= 1` are interpreted as percentage of
 screen space.
 
-### config.cmd
+#### config.cmd
 
 Default command for new terminals
 
@@ -61,7 +61,7 @@ Type: `table|string` passed to `termopen` (`:h jobstart()`)
 
 Default: `{ vim.o.shell }`
 
-### config.autoclose
+#### config.autoclose
 
 Automatically close terminal window when the process exits (on `TermClose`).
 
@@ -71,7 +71,7 @@ Default: `false`
 
 ## Functions
 
-### setup()
+#### setup()
 
 Signature: `setup(config)`
 
@@ -82,7 +82,7 @@ params:
 Set up the plugin with user `config`.
 A call to this function is always required.
 
-### set_target()
+#### set_target()
 
 Signature: `set_target(index)`
 
@@ -92,7 +92,7 @@ params:
 
 - `index` (`integer`): Terminal index.
 
-### cycle()
+#### cycle()
 
 Signature: `cycle(step)`
 
@@ -102,7 +102,7 @@ params:
 
 Cycle between active terminals.
 
-### run()
+#### run()
 
 Signature: `run(cmd?, opts?)`
 
@@ -115,7 +115,7 @@ Run a command in terminal with given options. If no command
 is provided, user will be prompted to insert one;
 If `cmd` is an empty string, `config.cmd` will be used.
 
-### open()
+#### open()
 
 Signature: `open(index, layout, force)`
 
@@ -125,7 +125,7 @@ params:
 
 Open a terminal with given layout.
 
-### close()
+#### close()
 
 Signature: `close(index)`
 
@@ -135,7 +135,7 @@ params:
 
 Close a terminal window.
 
-### kill()
+#### kill()
 
 Signature: `kill(index)`
 
@@ -145,7 +145,7 @@ params:
 
 Kill a terminal job and close its window.
 
-### toggle()
+#### toggle()
 
 Signature: `toggle(index, layout, force)`
 
@@ -158,7 +158,7 @@ params:
 Open a terminal with given layout, or close its window
 if it's visible in the current tab (unless `force` is `true`).
 
-### send()
+#### send()
 
 Signature: `send(index, data)`
 
@@ -169,7 +169,7 @@ params:
 
 ## Commands
 
-### TermRun
+#### TermRun
 
 :TermRun[!] [command]
 
@@ -177,22 +177,22 @@ Run [command] in terminal. If command is empty, user will be prompted
 to enter one, falling back to `config.cmd`. With [!] the new terminal window
 will replace the current buffer.
 
-### TermOpen
+#### TermOpen
 
 :TermOpen[!] [count]
 
 Open terminal with [count] index. With [!], a new window will be
 created even if the terminal is already displayed in the current tab.
 
-### TermClose
+#### TermClose
 
-### TermToggle
+#### TermToggle
 
-### TermKill
+#### TermKill
 
-### TermSend
+#### TermSend
 
-### TermSetTarget
+#### TermSetTarget
 
 ## Named Terminals
 
