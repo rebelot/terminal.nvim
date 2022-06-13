@@ -23,9 +23,7 @@ use({
 })
 ```
 
-## Usage
-
-### Config
+## Config
 
 Default config
 
@@ -37,131 +35,141 @@ Default config
 }
 ```
 
-#### config.layout
+### config.layout
 
 Specify the layout of the terminal window.
 
 Type: `table`
+
 Default: `{ open_cmd = "botright new"}`
 
-**`layout.open_cmd`:**
+`layout.open_cmd`:
 
 Vim command used to create the new buffer and window.
 
-**Float Layout:**
-When `open_cmd = "float"`, **`layout.height`** and **`layout.width`**
+Float Layout:
+When `open_cmd = "float"`, `layout.height` and `layout.width`
 are used to determine the height and width of the floating
 window. Values `<= 1` are interpreted as percentage of
 screen space.
 
-#### config.cmd
+### config.cmd
 
 Default command for new terminals
 
 Type: `table|string` passed to `termopen` (`:h jobstart()`)
+
 Default: `{ vim.o.shell }`
 
-#### config.autoclose
+### config.autoclose
 
 Automatically close terminal window when the process exits (on `TermClose`).
 
 Type: `bool`
+
 Default: `false`
 
-### Functions
+## Functions
 
-#### setup()
+### setup()
 
 Signature: `setup(config)`
 
 params:
-`config` (`table`): user configuration
+
+- `config` (`table`): user configuration
 
 Set up the plugin with user `config`.
 A call to this function is always required.
 
-#### set_target()
+### set_target()
 
 Signature: `set_target(index)`
 
 Set the `index` terminal as the target for other actions.
 
 params:
-`index` (`integer`): Terminal index.
 
-#### cycle()
+- `index` (`integer`): Terminal index.
+
+### cycle()
 
 Signature: `cycle(step)`
 
 params:
-`step` (`integer`): Increment number for cycling.
+
+-`step` (`integer`): Increment number for cycling.
 
 Cycle between active terminals.
 
-#### run()
+### run()
 
 Signature: `run(cmd?, opts?)`
 
 params:
-`cmd` (`table|string`): command to be executed by the terminal.
-`opts` (`table`): options to be passed to `termopen`
+
+- `cmd` (`table|string`): command to be executed by the terminal.
+- `opts` (`table`): options to be passed to `termopen`
 
 Run a command in terminal with given options. If no command
 is provided, user will be prompted to insert one;
 If `cmd` is an empty string, `config.cmd` will be used.
 
-#### open()
+### open()
 
 Signature: `open(index, layout, force)`
 
 params:
-`index`(`integer`): terminal index
-`layout` (`table`): layout spec
-`force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+
+-`index`(`integer`): terminal index -`layout` (`table`): layout spec -`force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
 Open a terminal with given layout.
 
-#### close()
+### close()
 
 Signature: `close(index)`
 
 params:
-`index`(`integer`): terminal index
+
+- `index`(`integer`): terminal index
 
 Close a terminal window.
 
-#### kill()
+### kill()
 
 Signature: `kill(index)`
 
 params:
-`index`(`integer`): terminal index
+
+- `index`(`integer`): terminal index
 
 Kill a terminal job and close its window.
 
-#### toggle()
+### toggle()
 
 Signature: `toggle(index, layout, force)`
 
 params:
-`index`(`integer`): terminal index
-`layout` (`table`): layout spec
-`force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+
+- `index`(`integer`): terminal index
+- `layout` (`table`): layout spec
+- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
 Open a terminal with given layout, or close its window
 if it's visible in the current tab (unless `force` is `true`).
 
-#### send()
+### send()
 
 Signature: `send(index, data)`
 
 params:
-`index`(`integer`): terminal index
-`data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
-### Commands
+- `index`(`integer`): terminal index
+- `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
-#### TermRun
+## Commands
+
+### TermRun
 
 :TermRun[!] [command]
 
@@ -169,26 +177,26 @@ Run [command] in terminal. If command is empty, user will be prompted
 to enter one, falling back to `config.cmd`. With [!] the new terminal window
 will replace the current buffer.
 
-#### TermOpen
+### TermOpen
 
 :TermOpen[!] [count]
 
 Open terminal with [count] index. With [!], a new window will be
 created even if the terminal is already displayed in the current tab.
 
-#### TermClose
+### TermClose
 
-#### TermToggle
+### TermToggle
 
-#### TermKill
+### TermKill
 
-#### TermSend
+### TermSend
 
-#### TermSetTarget
+### TermSetTarget
 
-### Named Terminals
+## Named Terminals
 
-### Donate
+## Donate
 
 Buy me coffee and support my work ;)
 
