@@ -179,20 +179,41 @@ will replace the current buffer.
 
 #### TermOpen
 
-:TermOpen[!] [count]
+:[count]TermOpen[!]
 
 Open terminal with [count] index. With [!], a new window will be
 created even if the terminal is already displayed in the current tab.
 
 #### TermClose
 
+:[count]TermClose
+
+Close terminal with [count] index.
+
 #### TermToggle
+
+:[count]TermToggle[!] [open_cmd]
+
+Toggle terminal with [count] index and layout specified by [open_cmd].
+With [!], a new window will be created even if the terminal is already displayed in the current tab.
 
 #### TermKill
 
+:[count]TermKill
+
+Kill terminal with [count] index.
+
 #### TermSend
 
+:[count]TermSend [text]
+
+Send [text] to terminal with [count] index.
+
 #### TermSetTarget
+
+:[count]TermSetTarget
+
+Set terminal with [count] index as target for terminal actions.
 
 ## Named Terminals
 
