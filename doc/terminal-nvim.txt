@@ -27,6 +27,8 @@ INSTALLATION                                      *terminal-nvim-installation*
 <
 
 
+------------------------------------------------------------------------------
+
 CONFIG                                                  *terminal-nvim-config*
 
 Default config
@@ -46,9 +48,7 @@ config.layout                          Specify the layout of the terminal
                                        window.
 
 
-Type: `table`
-
-Default: `{ open_cmd = "botright new"}`
+Type: `table` Default: `{ open_cmd = "botright new"}`
 
 `layout.open_cmd`:
 
@@ -63,9 +63,8 @@ are interpreted as percentage of screen space.
 config.cmd                             Default command for new terminals
 
 
-Type: `table|string` passed to `termopen` (`:h jobstart()`)
-
-Default: `{ vim.o.shell }`
+Type: `table|string` passed to `termopen` (`:h jobstart()`) Default: `{
+vim.o.shell }`
 
                                               *terminal-nvim-config.autoclose*
 
@@ -73,21 +72,16 @@ config.autoclose                       Automatically close terminal window when
                                        the process exits (on `TermClose`).
 
 
-Type: `bool`
+Type: `bool` Default: `false`
 
-Default: `false`
+------------------------------------------------------------------------------
 
 FUNCTIONS                                            *terminal-nvim-functions*
 
                                                        *terminal-nvim-setup()*
 
-setup()                                Signature: `setup(config)`
-
-
-params:
-
-
-- `config` (`table`): user configuration
+setup()                                Signature: `setup(config)` params: -
+                                       `config` (`table`): user configuration
 
 
 Set up the plugin with user `config`. A call to this function is always
@@ -95,40 +89,28 @@ required.
 
                                                   *terminal-nvim-set_target()*
 
-set_target()                           Signature: `set_target(index)`
+set_target()                           Signature: `set_target(index)` params: -
+                                       `index` (`integer`): Terminal index.
 
 
 Set the `index` terminal as the target for other actions.
 
-params:
-
-
-- `index` (`integer`): Terminal index.
-
-
                                                        *terminal-nvim-cycle()*
 
-cycle()                                Signature: `cycle(step)`
-
-
-params:
-
-
-- `step` (`integer`): Increment number for cycling.
+cycle()                                Signature: `cycle(step)` params: -
+                                       `step` (`integer`): Increment number for
+                                       cycling.
 
 
 Cycle between active terminals.
 
                                                          *terminal-nvim-run()*
 
-run()                                  Signature: `run(cmd?, opts?)`
-
-
-params:
-
-
-- `cmd` (`table|string`): command to be executed by the terminal.
-- `opts` (`table`): options to be passed to `termopen`
+run()                                  Signature: `run(cmd?, opts?)` params: -
+                                       `cmd` (`table|string`): command to be
+                                       executed by the terminal. - `opts`
+                                       (`table`): options to be passed to
+                                       `termopen`
 
 
 Run a command in terminal with given options. If no command is provided, user
@@ -138,40 +120,27 @@ be used.
                                                         *terminal-nvim-open()*
 
 open()                                 Signature: `open(index, layout, force)`
-
-
-params:
-
-
-- `index`(`integer`): terminal index
-- `layout` (`table`): layout spec
-- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+                                       params: - `index`(`integer`): terminal
+                                       index - `layout` (`table`): layout spec
+                                       - `force` (`bool`): Force opening the
+                                       terminal window even if it already
+                                       visible in the current tab.
 
 
 Open a terminal with given layout.
 
                                                        *terminal-nvim-close()*
 
-close()                                Signature: `close(index)`
-
-
-params:
-
-
-- `index`(`integer`): terminal index
+close()                                Signature: `close(index)` params: -
+                                       `index`(`integer`): terminal index
 
 
 Close a terminal window.
 
                                                         *terminal-nvim-kill()*
 
-kill()                                 Signature: `kill(index)`
-
-
-params:
-
-
-- `index`(`integer`): terminal index
+kill()                                 Signature: `kill(index)` params: -
+                                       `index`(`integer`): terminal index
 
 
 Kill a terminal job and close its window.
@@ -179,15 +148,11 @@ Kill a terminal job and close its window.
                                                       *terminal-nvim-toggle()*
 
 toggle()                               Signature: `toggle(index, layout,
-                                       force)`
-
-
-params:
-
-
-- `index`(`integer`): terminal index
-- `layout` (`table`): layout spec
-- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+                                       force)` params: - `index`(`integer`):
+                                       terminal index - `layout` (`table`):
+                                       layout spec - `force` (`bool`): Force
+                                       opening the terminal window even if it
+                                       already visible in the current tab.
 
 
 Open a terminal with given layout, or close its window if it’s visible in the
@@ -195,15 +160,13 @@ current tab (unless `force` is `true`).
 
                                                         *terminal-nvim-send()*
 
-send()                                 Signature: `send(index, data)`
+send()                                 Signature: `send(index, data)` params: -
+                                       `index`(`integer`): terminal index -
+                                       `data` (`table|string`): Text to be sent
+                                       to the terminal via `chansend()`
 
 
-params:
-
-
-- `index`(`integer`): terminal index
-- `data` (`table|string`): Text to be sent to the terminal via `chansend()`
-
+------------------------------------------------------------------------------
 
 KEYMAPS                                                *terminal-nvim-keymaps*
 
@@ -227,6 +190,8 @@ EXAMPLE MAPPINGS:
 <
 
 
+------------------------------------------------------------------------------
+
 COMMANDS                                              *terminal-nvim-commands*
 
                                                        *terminal-nvim-TermRun*
@@ -240,7 +205,7 @@ replace the current buffer.
 
                                                       *terminal-nvim-TermOpen*
 
-TermOpen                               `:[count]TermOpen[!]`
+TermOpen                               :[count]TermOpen[!]
 
 
 Open terminal with [count] index. With [!], a new window will be created even
@@ -248,14 +213,14 @@ if the terminal is already displayed in the current tab.
 
                                                      *terminal-nvim-TermClose*
 
-TermClose                              `:[count]TermClose`
+TermClose                              :[count]TermClose
 
 
 Close terminal with [count] index.
 
                                                     *terminal-nvim-TermToggle*
 
-TermToggle                             `:[count]TermToggle[!] [open_cmd]`
+TermToggle                             :[count]TermToggle[!] [open_cmd]
 
 
 Toggle terminal with [count] index and layout specified by [open_cmd]. With
@@ -264,24 +229,26 @@ the current tab.
 
                                                       *terminal-nvim-TermKill*
 
-TermKill                               `:[count]TermKill`
+TermKill                               :[count]TermKill
 
 
 Kill terminal with [count] index.
 
                                                       *terminal-nvim-TermSend*
 
-TermSend                               `:[count]TermSend [text]`
+TermSend                               :[count]TermSend [text]
 
 
 Send [text] to terminal with [count] index.
 
                                                  *terminal-nvim-TermSetTarget*
 
-TermSetTarget                          `:[count]TermSetTarget`
+TermSetTarget                          :[count]TermSetTarget
 
 
 Set terminal with [count] index as target for terminal actions.
+
+------------------------------------------------------------------------------
 
 NAMED TERMINALS                                *terminal-nvim-named-terminals*
 
@@ -328,6 +295,8 @@ LAZYGIT:
     end, { nargs = "?" })
 <
 
+
+------------------------------------------------------------------------------
 
 DONATE                                                  *terminal-nvim-donate*
 
