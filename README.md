@@ -43,13 +43,13 @@ Specify the layout of the terminal window.
 
 Type: `table`
 
-Default: `{ open_cmd = "botright new"}`
+Default: `{ open_cmd = "botright new" }`
 
-`layout.open_cmd`:
+##### config.layout.open_cmd:
 
 Vim command used to create the new buffer and window.
 
-Float Layout:
+##### Float Layout:
 When `open_cmd = "float"`, `layout.height` and `layout.width`
 are used to determine the height and width of the floating
 window. Values `<= 1` are interpreted as percentage of
@@ -250,7 +250,7 @@ Set terminal with [count] index as target for terminal actions.
 
 ## Named Terminals
 
-IPYTHON:
+#### IPYTHON:
 
 ```lua
 local ipython = require("terminal").terminal:new({
@@ -277,7 +277,7 @@ vim.api.nvim_create_user_command("IPython", function()
 end, {})
 ```
 
-LAZYGIT:
+#### LAZYGIT:
 
 ```lua
 local lazygit = require("terminal").terminal:new({
