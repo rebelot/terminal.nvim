@@ -213,7 +213,7 @@ replace the current buffer.
 
                                                       *terminal-nvim-TermOpen*
 
-TermOpen                               :TermOpen[!] [count]
+TermOpen                               :[count]TermOpen[!]
 
 
 Open terminal with [count] index. With [!], a new window will be created even
@@ -221,13 +221,40 @@ if the terminal is already displayed in the current tab.
 
                                                      *terminal-nvim-TermClose*
 
+TermClose                              :[count]TermClose
+
+
+Close terminal with [count] index.
+
                                                     *terminal-nvim-TermToggle*
+
+TermToggle                             :[count]TermToggle[!] [open_cmd]
+
+
+Toggle terminal with [count] index and layout specified by [open_cmd]. With
+[!], a new window will be created even if the terminal is already displayed in
+the current tab.
 
                                                       *terminal-nvim-TermKill*
 
+TermKill                               :[count]TermKill
+
+
+Kill terminal with [count] index.
+
                                                       *terminal-nvim-TermSend*
 
+TermSend                               :[count]TermSend [text]
+
+
+Send [text] to terminal with [count] index.
+
                                                  *terminal-nvim-TermSetTarget*
+
+TermSetTarget                          :[count]TermSetTarget
+
+
+Set terminal with [count] index as target for terminal actions.
 
 NAMED TERMINALS                                *terminal-nvim-named-terminals*
 
