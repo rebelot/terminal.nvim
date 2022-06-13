@@ -48,7 +48,9 @@ config.layout                          Specify the layout of the terminal
                                        window.
 
 
-Type: `table` Default: `{ open_cmd = "botright new"}`
+Type: `table`
+
+Default: `{ open_cmd = "botright new"}`
 
 `layout.open_cmd`:
 
@@ -63,8 +65,9 @@ are interpreted as percentage of screen space.
 config.cmd                             Default command for new terminals
 
 
-Type: `table|string` passed to `termopen` (`:h jobstart()`) Default: `{
-vim.o.shell }`
+Type: `table|string` passed to `termopen` (`:h jobstart()`)
+
+Default: `{ vim.o.shell }`
 
                                               *terminal-nvim-config.autoclose*
 
@@ -72,7 +75,9 @@ config.autoclose                       Automatically close terminal window when
                                        the process exits (on `TermClose`).
 
 
-Type: `bool` Default: `false`
+Type: `bool`
+
+Default: `false`
 
 ------------------------------------------------------------------------------
 
@@ -80,8 +85,10 @@ FUNCTIONS                                            *terminal-nvim-functions*
 
                                                        *terminal-nvim-setup()*
 
-setup()                                Signature: `setup(config)` params:
+setup()                                `setup(config)`
 
+
+Params:
 
 
 - `config` (`table`): user configuration
@@ -92,8 +99,10 @@ required.
 
                                                   *terminal-nvim-set_target()*
 
-set_target()                           Signature: `set_target(index)` params:
+set_target()                           `set_target(index)`
 
+
+Params:
 
 
 - `index` (`integer`): Terminal index.
@@ -103,8 +112,10 @@ Set the `index` terminal as the target for other actions.
 
                                                        *terminal-nvim-cycle()*
 
-cycle()                                Signature: `cycle(step)` params:
+cycle()                                `cycle(step)`
 
+
+Params:
 
 
 - `step` (`integer`): Increment number for cycling.
@@ -114,8 +125,10 @@ Cycle between active terminals.
 
                                                          *terminal-nvim-run()*
 
-run()                                  Signature: `run(cmd?, opts?)` params:
+run()                                  `run(cmd?, opts?)`
 
+
+Params:
 
 
 - `cmd` (`table|string`): command to be executed by the terminal.
@@ -128,9 +141,10 @@ be used.
 
                                                         *terminal-nvim-open()*
 
-open()                                 Signature: `open(index, layout, force)`
-                                       params:
+open()                                 `open(index, layout, force)`
 
+
+Params:
 
 
 - `index`(`integer`): terminal index
@@ -142,8 +156,10 @@ Open a terminal with given layout.
 
                                                        *terminal-nvim-close()*
 
-close()                                Signature: `close(index)` params:
+close()                                `close(index)`
 
+
+Params:
 
 
 - `index`(`integer`): terminal index
@@ -153,8 +169,10 @@ Close a terminal window.
 
                                                         *terminal-nvim-kill()*
 
-kill()                                 Signature: `kill(index)` params:
+kill()                                 `kill(index)`
 
+
+Params:
 
 
 - `index`(`integer`): terminal index
@@ -164,9 +182,10 @@ Kill a terminal job and close its window.
 
                                                       *terminal-nvim-toggle()*
 
-toggle()                               Signature: `toggle(index, layout,
-                                       force)` params:
+toggle()                               `toggle(index, layout, force)`
 
+
+Params:
 
 
 - `index`(`integer`): terminal index
@@ -179,8 +198,10 @@ current tab (unless `force` is `true`).
 
                                                         *terminal-nvim-send()*
 
-send()                                 Signature: `send(index, data)` params:
+send()                                 `send(index, data)`
 
+
+Params:
 
 
 - `index`(`integer`): terminal index
