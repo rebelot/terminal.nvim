@@ -22,7 +22,6 @@ command("TermKill", function(args)
     terminal.kill(args.count)
 end, {
     count = true,
-    bang = true,
     desc = "Terminal: Kill terminal {N}",
 })
 
