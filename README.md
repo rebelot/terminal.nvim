@@ -23,6 +23,8 @@ use({
 })
 ```
 
+---
+
 ## Config
 
 Default config
@@ -39,8 +41,7 @@ Default config
 
 Specify the layout of the terminal window.
 
-Type: `table`
-
+Type: `table`\
 Default: `{ open_cmd = "botright new"}`
 
 `layout.open_cmd`:
@@ -57,26 +58,24 @@ screen space.
 
 Default command for new terminals
 
-Type: `table|string` passed to `termopen` (`:h jobstart()`)
-
+Type: `table|string` passed to `termopen` (`:h jobstart()`)\
 Default: `{ vim.o.shell }`
 
 #### config.autoclose
 
 Automatically close terminal window when the process exits (on `TermClose`).
 
-Type: `bool`
-
+Type: `bool`\
 Default: `false`
+
+---
 
 ## Functions
 
 #### setup()
 
-Signature: `setup(config)`
-
-params:
-
+Signature: `setup(config)`\
+params:\
 - `config` (`table`): user configuration
 
 Set up the plugin with user `config`.
@@ -84,30 +83,24 @@ A call to this function is always required.
 
 #### set_target()
 
-Signature: `set_target(index)`
+Signature: `set_target(index)`\
+params:\
+- `index` (`integer`): Terminal index.
 
 Set the `index` terminal as the target for other actions.
 
-params:
-
-- `index` (`integer`): Terminal index.
-
 #### cycle()
 
-Signature: `cycle(step)`
-
-params:
-
+Signature: `cycle(step)`\
+params:\
 - `step` (`integer`): Increment number for cycling.
 
 Cycle between active terminals.
 
 #### run()
 
-Signature: `run(cmd?, opts?)`
-
-params:
-
+Signature: `run(cmd?, opts?)`\
+params:\
 - `cmd` (`table|string`): command to be executed by the terminal.
 - `opts` (`table`): options to be passed to `termopen`
 
@@ -117,10 +110,8 @@ If `cmd` is an empty string, `config.cmd` will be used.
 
 #### open()
 
-Signature: `open(index, layout, force)`
-
-params:
-
+Signature: `open(index, layout, force)`\
+params:\
 - `index`(`integer`): terminal index
 - `layout` (`table`): layout spec
 - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
@@ -129,30 +120,24 @@ Open a terminal with given layout.
 
 #### close()
 
-Signature: `close(index)`
-
-params:
-
+Signature: `close(index)`\
+params:\
 - `index`(`integer`): terminal index
 
 Close a terminal window.
 
 #### kill()
 
-Signature: `kill(index)`
-
-params:
-
+Signature: `kill(index)`\
+params:\
 - `index`(`integer`): terminal index
 
 Kill a terminal job and close its window.
 
 #### toggle()
 
-Signature: `toggle(index, layout, force)`
-
-params:
-
+Signature: `toggle(index, layout, force)`\
+params:\
 - `index`(`integer`): terminal index
 - `layout` (`table`): layout spec
 - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
@@ -162,12 +147,12 @@ if it's visible in the current tab (unless `force` is `true`).
 
 #### send()
 
-Signature: `send(index, data)`
-
-params:
-
+Signature: `send(index, data)`\
+params:\
 - `index`(`integer`): terminal index
 - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
+
+---
 
 ## Keymaps
 
@@ -190,6 +175,8 @@ vim.keymap.set("n", "<leader>t]", term_map.cycle_next)
 vim.keymap.set("n", "<leader>t[", term_map.cycle_prev)
 ```
 
+---
+
 ## Commands
 
 #### TermRun
@@ -202,41 +189,43 @@ will replace the current buffer.
 
 #### TermOpen
 
-`:[count]TermOpen[!]`
+:[count]TermOpen[!]
 
 Open terminal with [count] index. With [!], a new window will be
 created even if the terminal is already displayed in the current tab.
 
 #### TermClose
 
-`:[count]TermClose`
+:[count]TermClose
 
 Close terminal with [count] index.
 
 #### TermToggle
 
-`:[count]TermToggle[!] [open_cmd]`
+:[count]TermToggle[!] [open_cmd]
 
 Toggle terminal with [count] index and layout specified by [open_cmd].
 With [!], a new window will be created even if the terminal is already displayed in the current tab.
 
 #### TermKill
 
-`:[count]TermKill`
+:[count]TermKill
 
 Kill terminal with [count] index.
 
 #### TermSend
 
-`:[count]TermSend [text]`
+:[count]TermSend [text]
 
 Send [text] to terminal with [count] index.
 
 #### TermSetTarget
 
-`:[count]TermSetTarget`
+:[count]TermSetTarget
 
 Set terminal with [count] index as target for terminal actions.
+
+---
 
 ## Named Terminals
 
@@ -281,6 +270,8 @@ vim.api.nvim_create_user_command("Lazygit", function(args)
     lazygit:toggle(nil, true)
 end, { nargs = "?" })
 ```
+
+---
 
 ## Donate
 
