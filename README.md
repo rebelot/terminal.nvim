@@ -261,7 +261,7 @@ Set terminal with [count] index as target for terminal actions.
 
 ---
 
-## Terminal objects and thei methods
+## Terminal objects
 
 #### terminal:new()
 
@@ -328,7 +328,7 @@ Send text to terminal.
 
 ### Named Terminals
 
-#### IPython:
+##### IPython:
 
 ```lua
 local ipython = require("terminal").terminal:new({
@@ -355,7 +355,7 @@ vim.api.nvim_create_user_command("IPython", function()
 end, {})
 ```
 
-#### Lazygit:
+##### Lazygit:
 
 ```lua
 local lazygit = require("terminal").terminal:new({
@@ -370,7 +370,7 @@ vim.api.nvim_create_user_command("Lazygit", function(args)
 end, { nargs = "?" })
 ```
 
-#### Htop
+##### Htop:
 
 ```lua
 local htop = require("terminal").terminal:new({
