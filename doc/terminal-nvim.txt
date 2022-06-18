@@ -9,7 +9,8 @@ Table of Contents                            *terminal-nvim-table-of-contents*
   - Functions                                        |terminal-nvim-functions|
   - Keymaps                                            |terminal-nvim-keymaps|
   - Commands                                          |terminal-nvim-commands|
-  - Named Terminals                            |terminal-nvim-named-terminals|
+  - Terminal objects and thei methods|terminal-nvim-terminal-objects-and-thei-methods|
+  - Tips                                                  |terminal-nvim-tips|
   - Donate                                              |terminal-nvim-donate|
 
 ==============================================================================
@@ -59,8 +60,8 @@ Vim command used to create the new buffer and window.
 FLOAT LAYOUT:
 
 When `open_cmd = "float"`, `layout.height` and `layout.width` are used to
-determine the height and width of the floating window. Values `<= 1` are
-interpreted as percentage of screen space.
+determine the height (lines) and width (columns) of the floating window. Values
+`<= 1` are interpreted as percentage of screen space.
 
                                                     *terminal-nvim-config.cmd*
 
@@ -210,16 +211,30 @@ Params:
 - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
 
+                                          *terminal-nvim-current_term_index()*
+
+current_term_index()                   `current_term_index()`
+
+
+Get the index of the terminal in the current window.
+
+                                                *terminal-nvim-current_term()*
+
+current_term()                         `get_current_term()`
+
+
+Get the terminal object displayed in the current window.
+
 ------------------------------------------------------------------------------
 
 KEYMAPS                                                *terminal-nvim-keymaps*
 
 Keymaps can be set up using the API defined in `terminal.mappings.` When called
 with parameters, each keymap API function returns a pre-loaded function with
-given parameters. Otherwise, the corresponding terminal function is called with
-no arguments.
+given parameters. Otherwise, the corresponding terminal function will be called
+with default arguments.
 
-EXAMPLE MAPPINGS:
+EXAMPLE MAPPINGS
 
 >
     local term_map = require("terminal.mappings")
@@ -294,9 +309,88 @@ Set terminal with [count] index as target for terminal actions.
 
 ------------------------------------------------------------------------------
 
-NAMED TERMINALS                                *terminal-nvim-named-terminals*
+TERMINAL OBJECTS AND THEI METHODS*terminal-nvim-terminal-objects-and-thei-methods*
 
-                                                      *terminal-nvim-IPYTHON:*
+                                                *terminal-nvim-terminal:new()*
+
+terminal:new()                         `terminal:new(opts)`
+
+
+Params:
+
+
+- `opts` (`table`):
+    - layout (`table`): layout spec
+    - cmd (`table|string`): command to be executed by the terminal
+    - autoclose (`bool`): automatically close terminal window when the process exits
+    - cwd (`string|function->string|nil`): CWD of the terminal job.
+    - Other fields passed to `jobstart`:
+        - clear_env
+        - env
+        - on_exit
+        - on_stdout
+        - on_stderr
+
+
+                                               *terminal-nvim-terminal:open()*
+
+terminal:open()                        `terminal:open(layout, force)`
+
+
+Params:
+
+
+- `layout` (`table`): layout spec
+- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+
+
+Open the terminal with given layout.
+
+                                              *terminal-nvim-terminal:close()*
+
+terminal:close()                       `terminal:close()`
+
+
+Close the terminal window in the current tab.
+
+                                             *terminal-nvim-terminal:toggle()*
+
+terminal:toggle()                      `terminal:toggle(layout, force)`
+
+
+Params:
+
+
+- `layout` (`table`): layout spec
+- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+
+
+Open the terminal with given layout, or close its window if it’s visible in
+the current tab (unless `force` is `true`).
+
+                                               *terminal-nvim-terminal:kill()*
+
+terminal:kill()                        `terminal:kill()`
+
+
+Kill a terminal job and close its window.
+
+                                               *terminal-nvim-terminal:send()*
+
+terminal:send()                        `terminal:send(data)`
+
+
+Params:
+
+
+- `data` (`table|string`): Text to be sent to the terminal via `chansend()`
+
+
+Send text to terminal.
+
+NAMED TERMINALS ~
+
+                                                      *terminal-nvim-IPython:*
 
 >
     local ipython = require("terminal").terminal:new({
@@ -324,7 +418,7 @@ NAMED TERMINALS                                *terminal-nvim-named-terminals*
 <
 
 
-                                                      *terminal-nvim-LAZYGIT:*
+                                                      *terminal-nvim-Lazygit:*
 
 >
     local lazygit = require("terminal").terminal:new({
@@ -340,7 +434,61 @@ NAMED TERMINALS                                *terminal-nvim-named-terminals*
 <
 
 
+                                                          *terminal-nvim-Htop*
+
+>
+    local htop = require("terminal").terminal:new({
+        layout = { open_cmd = "float" },
+        cmd = { "htop" },
+        autoclose = true,
+    })
+    vim.api.nvim_create_user_command("Htop", function()
+        htop:toggle(nil, true)
+    end, { nargs = "?" })
+<
+
+
 ------------------------------------------------------------------------------
+
+TIPS                                                      *terminal-nvim-tips*
+
+USEFUL TERMINAL MAPPINGS
+
+>
+    tnoremap <c-\><c-\> <c-\><c-n>
+    tnoremap <c-h> <c-\><c-n><c-w>h
+    tnoremap <c-j> <c-\><c-n><c-w>j
+    tnoremap <c-k> <c-\><c-n><c-w>k
+    tnoremap <c-l> <c-\><c-n><c-w>l
+<
+
+
+AUTO INSERT MODE
+
+>
+    vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
+        callback = function(args)
+            if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
+                vim.cmd("startinsert")
+            end
+        end,
+    })
+<
+
+
+TERMINAL WINDOW HIGHLIGHT
+
+>
+    vim.api.nvim_create_autocmd("TermOpen", {
+        command = [[setlocal nonumber norelativenumber winhl=Normal:NormalFloat]]
+    })
+<
+
+
+STATUSLINE INTEGRATION
+
+Use `terminal.current_term_index()` to get the current terminal index and
+display it within the statusline.
 
 DONATE                                                  *terminal-nvim-donate*
 
