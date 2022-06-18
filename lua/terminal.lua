@@ -225,4 +225,11 @@ function M.current_term_index()
     end
 end
 
+---Get the current buffer terminal
+---@return Terminal
+function M.get_current_term()
+    local term = active_terminals:get_current_buf_terminal()
+    return term
+end
+
 return M
