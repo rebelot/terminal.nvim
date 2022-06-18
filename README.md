@@ -52,9 +52,9 @@ Vim command used to create the new buffer and window.
 ##### Float Layout:
 
 When `open_cmd = "float"`, `layout.height` and `layout.width`
-are used to determine the height and width of the floating
-window. Values `<= 1` are interpreted as percentage of
-screen space.
+are used to determine the height (lines) and width (columns)
+of the floating window.
+Values `<= 1` are interpreted as percentage of screen space.
 
 #### config.cmd
 
@@ -174,6 +174,18 @@ Params:
 - `index`(`integer`): terminal index
 - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
+#### current_term_index()
+
+`current_term_index()`
+
+Get the index of the terminal in the current window.
+
+#### current_term()
+
+`get_current_term()`
+
+Get the terminal object displayed in the current window.
+
 ---
 
 ## Keymaps
@@ -181,9 +193,9 @@ Params:
 Keymaps can be set up using the API defined in `terminal.mappings.`
 When called with parameters, each keymap API function returns a
 pre-loaded function with given parameters. Otherwise, the corresponding
-terminal function is called with no arguments.
+terminal function will be called with default arguments.
 
-EXAMPLE MAPPINGS:
+##### Example mappings
 
 ```lua
 local term_map = require("terminal.mappings")
@@ -249,7 +261,72 @@ Set terminal with [count] index as target for terminal actions.
 
 ---
 
-## Named Terminals
+## Terminal objects and thei methods
+
+#### terminal:new()
+
+`terminal:new(opts)`
+
+Params:
+
+- `opts` (`table`):
+  - layout (`table`): layout spec
+  - cmd (`table|string`): command to be executed by the terminal
+  - autoclose (`bool`): automatically close terminal window when the process exits
+  - cwd (`string|function->string|nil`): CWD of the terminal job.
+  - Other fields passed to `jobstart`:
+    - clear_env
+    - env
+    - on_exit
+    - on_stdout
+    - on_stderr
+
+#### terminal:open()
+
+`terminal:open(layout, force)`
+
+Params:
+
+- `layout` (`table`): layout spec
+- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+
+Open the terminal with given layout.
+
+#### terminal:close()
+
+`terminal:close()`
+
+Close the terminal window in the current tab.
+
+#### terminal:toggle()
+
+`terminal:toggle(layout, force)`
+
+Params:
+
+- `layout` (`table`): layout spec
+- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+
+Open the terminal with given layout, or close its window
+if it's visible in the current tab (unless `force` is `true`).
+
+#### terminal:kill()
+
+`terminal:kill()`
+
+Kill a terminal job and close its window.
+
+#### terminal:send()
+
+`terminal:send(data)`
+
+Params:
+
+- `data` (`table|string`): Text to be sent to the terminal via `chansend()`
+
+Send text to terminal.
+
+### Named Terminals
 
 #### IPython:
 
@@ -293,7 +370,56 @@ vim.api.nvim_create_user_command("Lazygit", function(args)
 end, { nargs = "?" })
 ```
 
+#### Htop
+
+```lua
+local htop = require("terminal").terminal:new({
+    layout = { open_cmd = "float" },
+    cmd = { "htop" },
+    autoclose = true,
+})
+vim.api.nvim_create_user_command("Htop", function()
+    htop:toggle(nil, true)
+end, { nargs = "?" })
+```
+
 ---
+
+## Tips
+
+##### Useful terminal mappings
+
+```vim
+tnoremap <c-\><c-\> <c-\><c-n>
+tnoremap <c-h> <c-\><c-n><c-w>h
+tnoremap <c-j> <c-\><c-n><c-w>j
+tnoremap <c-k> <c-\><c-n><c-w>k
+tnoremap <c-l> <c-\><c-n><c-w>l
+```
+
+##### Auto insert mode
+
+```lua
+vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
+    callback = function(args)
+        if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
+            vim.cmd("startinsert")
+        end
+    end,
+})
+```
+
+##### terminal window highlight
+
+```lua
+vim.api.nvim_create_autocmd("TermOpen", {
+    command = [[setlocal nonumber norelativenumber winhl=Normal:NormalFloat]]
+})
+```
+
+##### Statusline integration
+
+Use `terminal.current_term_index()` to get the current terminal index and display it within the statusline.
 
 ## Donate
 
