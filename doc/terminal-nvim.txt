@@ -9,7 +9,7 @@ Table of Contents                            *terminal-nvim-table-of-contents*
   - Functions                                        |terminal-nvim-functions|
   - Keymaps                                            |terminal-nvim-keymaps|
   - Commands                                          |terminal-nvim-commands|
-  - Terminal objects and thei methods|terminal-nvim-terminal-objects-and-thei-methods|
+  - Terminal objects                          |terminal-nvim-terminal-objects|
   - Tips                                                  |terminal-nvim-tips|
   - Donate                                              |terminal-nvim-donate|
 
@@ -309,7 +309,7 @@ Set terminal with [count] index as target for terminal actions.
 
 ------------------------------------------------------------------------------
 
-TERMINAL OBJECTS AND THEI METHODS*terminal-nvim-terminal-objects-and-thei-methods*
+TERMINAL OBJECTS                              *terminal-nvim-terminal-objects*
 
                                                 *terminal-nvim-terminal:new()*
 
@@ -390,7 +390,7 @@ Send text to terminal.
 
 NAMED TERMINALS ~
 
-                                                      *terminal-nvim-IPython:*
+IPYTHON:
 
 >
     local ipython = require("terminal").terminal:new({
@@ -418,7 +418,7 @@ NAMED TERMINALS ~
 <
 
 
-                                                      *terminal-nvim-Lazygit:*
+LAZYGIT:
 
 >
     local lazygit = require("terminal").terminal:new({
@@ -434,7 +434,7 @@ NAMED TERMINALS ~
 <
 
 
-                                                          *terminal-nvim-Htop*
+HTOP:
 
 >
     local htop = require("terminal").terminal:new({
