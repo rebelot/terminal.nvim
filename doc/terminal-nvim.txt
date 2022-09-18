@@ -260,15 +260,18 @@ TermRun                                :TermRun[!] [command]
 
 Run [command] in terminal. If command is empty, user will be prompted to enter
 one, falling back to `config.cmd`. With [!] the new terminal window will
-replace the current buffer.
+replace the current buffer. Accepts `split` and `vertical` modifiers to set the
+new terminal layout `open_cmd`. (eg: `botright vertical TermRun ipython`)
 
                                                       *terminal-nvim-TermOpen*
 
-TermOpen                               :[count]TermOpen[!]
+TermOpen                               :[count]TermOpen[!] [open_cmd]
 
 
-Open terminal with [count] index. With [!], a new window will be created even
-if the terminal is already displayed in the current tab.
+Open terminal with [count] index and layout specified by [open_cmd]. With [!],
+a new window will be created even if the terminal is already displayed in the
+current tab, otherwise the terminal will be focused. Also accepts `split` and
+`vertical` modifiers to specify `open_cmd`.
 
                                                      *terminal-nvim-TermClose*
 
@@ -284,7 +287,8 @@ TermToggle                             :[count]TermToggle[!] [open_cmd]
 
 Toggle terminal with [count] index and layout specified by [open_cmd]. With
 [!], a new window will be created even if the terminal is already displayed in
-the current tab.
+the current tab. Also accepts `split` and `vertical` modifiers to specify
+`open_cmd`.
 
                                                       *terminal-nvim-TermKill*
 
