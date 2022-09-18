@@ -42,7 +42,7 @@ end
 
 function M.setup(config)
     _config = vim.tbl_deep_extend("force", default_config, config or {})
-    require'terminal.commands'
+    require("terminal.commands")
 
     init_autocmds()
 end
@@ -72,10 +72,10 @@ end
 ---if current buffer is a terminal and cur_buf is true, use that
 ---if current tab contains a terminal, use that (first window)
 ---if tab_only is false, fallback to last terminal in active_terminals
----@param index integer
+---@param index? integer
 ---@param cur_buf boolean
 ---@param tab_only boolean
----@return Terminal
+---@return Terminal|nil
 local function get_target_terminal(index, cur_buf, tab_only)
     local terminals = active_terminals:get_sorted_terminals()
     if not terminals then
@@ -129,9 +129,15 @@ end
 ---@param opts? table
 function M.run(cmd, opts)
     opts = opts or {}
-    cmd = cmd or vim.fn.expandcmd(vim.fn.input("Command: ", "", "shellcmd"))
+    if not cmd then
+        local ok, input = pcall(vim.fn.input, "Command: ", "", "shellcmd")
+        if not ok then
+            return
+        end
+        cmd = vim.fn.expandcmd(input)
+    end
     opts.cmd = cmd ~= "" and cmd or nil
-    terminal:new({ cmd = opts.cmd }):open(opts.layout)
+    terminal:new(opts):open()
 end
 
 ---Open a terminal with given layout.
@@ -140,9 +146,9 @@ end
 ---if target_term is set, use that
 ---if tab contains a terminal, switch to that (first window)
 ---else, fallback to last terminal in active_terminals
----@param index integer?
----@param layout table?
----@param force boolean?
+---@param index? integer
+---@param layout? table
+---@param force? boolean
 function M.open(index, layout, force)
     index = (index and index ~= 0) and index or nil
     local term = get_target_terminal(index, false, false)
@@ -159,7 +165,7 @@ end
 ---if index is given or target_term is set, close that terminal window.
 ---if current buffer is a terminal, close it
 ---else, close the first terminal in tab
----@param index integer?
+---@param index? integer
 function M.close(index)
     index = (index and index ~= 0) and index or nil
     local term = get_target_terminal(index, true, true)
@@ -174,7 +180,7 @@ end
 ---if current buffer is a terminal, kill it
 ---if current tab contains a terminal, kill the first terminal in tab
 ---else, kill the last terminal in active_terminals
----@param index integer?
+---@param index? integer
 function M.kill(index)
     index = (index and index ~= 0) and index or nil
     local term = get_target_terminal(index, true, false)
@@ -190,9 +196,9 @@ end
 ---if current buffer is a terminal, toggle (close) it
 ---if current tab contains a terminal, toggle (close) the first terminal in tab
 ---else, toggle the last terminal in active_terminals
----@param index integer?
----@param layout table?
----@param force boolean?
+---@param index? integer
+---@param layout? table
+---@param force? boolean
 function M.toggle(index, layout, force)
     index = (index and index ~= 0) and index or nil
     local term = get_target_terminal(index, true, false)
@@ -205,7 +211,7 @@ function M.toggle(index, layout, force)
 end
 
 ---Send text to a terminal
----@param index integer?
+---@param index? integer
 ---@param data string | table
 function M.send(index, data)
     index = (index and index ~= 0) and index or nil
@@ -217,7 +223,7 @@ function M.send(index, data)
 end
 
 ---Get the index of the current terminal
----@return integer
+---@return integer|nil
 function M.current_term_index()
     local term = active_terminals:get_current_buf_terminal()
     if term then
@@ -226,7 +232,7 @@ function M.current_term_index()
 end
 
 ---Get the current buffer terminal
----@return Terminal
+---@return Terminal|nil
 function M.get_current_term()
     local term = active_terminals:get_current_buf_terminal()
     return term

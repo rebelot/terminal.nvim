@@ -219,14 +219,17 @@ vim.keymap.set("n", "<leader>t[", term_map.cycle_prev)
 
 Run [command] in terminal. If command is empty, user will be prompted
 to enter one, falling back to `config.cmd`. With [!] the new terminal window
-will replace the current buffer.
+will replace the current buffer. Accepts `split` and `vertical` modifiers to
+set the new terminal layout `open_cmd`. (eg: `botright vertical TermRun ipython`)
 
 #### TermOpen
 
-:[count]TermOpen[!]
+:[count]TermOpen[!] [open_cmd]
 
-Open terminal with [count] index. With [!], a new window will be
-created even if the terminal is already displayed in the current tab.
+Open terminal with [count] index and layout specified by [open_cmd].
+With [!], a new window will be created even if the terminal is already displayed in the current tab,
+otherwise the terminal will be focused.
+Also accepts `split` and `vertical` modifiers to specify `open_cmd`.
 
 #### TermClose
 
@@ -240,6 +243,7 @@ Close terminal with [count] index.
 
 Toggle terminal with [count] index and layout specified by [open_cmd].
 With [!], a new window will be created even if the terminal is already displayed in the current tab.
+Also accepts `split` and `vertical` modifiers to specify `open_cmd`.
 
 #### TermKill
 

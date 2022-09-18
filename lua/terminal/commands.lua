@@ -1,8 +1,24 @@
 local terminal = require("terminal")
 local command = vim.api.nvim_create_user_command
 
+local function parse_layout(args, ignore_args, bang)
+    local split = args.smods.split
+    local vert = args.smods.vertical
+
+    local open_cmd
+    if bang then
+        open_cmd = "enew"
+    elseif split ~= "" or vert then
+        open_cmd = (split ~= "" and (split .. " ") or "") .. (vert and "vertical " or "") .. "new"
+    elseif not ignore_args and args.args ~= "" then
+        open_cmd = args.args
+    end
+
+    return open_cmd and { open_cmd = open_cmd } or nil
+end
+
 command("TermOpen", function(args)
-    local layout = args.args ~= "" and { open_cmd = args.args }
+    local layout = parse_layout(args)
     terminal.open(args.count, layout, args.bang)
 end, {
     count = true,
@@ -26,7 +42,7 @@ end, {
 })
 
 command("TermToggle", function(args)
-    local layout = args.args ~= "" and { open_cmd = args.args }
+    local layout = parse_layout(args)
     terminal.toggle(args.count, layout, args.bang)
 end, {
     count = true,
@@ -37,12 +53,11 @@ end, {
 
 command("TermRun", function(args)
     local opts
-    if args.bang then
-        opts = {
-            layout = { open_cmd = "enew" },
-        }
+    local layout = parse_layout(args, true, args.bang)
+    if layout then
+        opts = { layout = layout }
     end
-    local cmd = args.args ~= "" and vim.fn.expand(args.args)
+    local cmd = args.args ~= "" and vim.fn.expandcmd(args.args) or nil
     terminal.run(cmd, opts)
 end, {
     complete = "shellcmd",

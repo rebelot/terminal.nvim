@@ -17,7 +17,7 @@ end
 ---@field bufnr number
 ---@field job_id number
 ---@field autoclose boolean
----@field cmd string
+---@field cmd string|table
 ---@field clear_env boolean
 ---@field cwd string | function
 ---@field env table
@@ -122,8 +122,8 @@ end
 ---if the terminal is already displayed, the first window containing it will be focused
 ---if force is true, a new window for the terminal will always be displayed.
 ---if layout is given, the terminal will be displayed in the given layout
----@param layout table?
----@param force boolean?
+---@param layout? table
+---@param force? boolean
 function Terminal:open(layout, force)
     local _, winid = next(self:get_current_tab_windows())
     if winid and not force then
@@ -159,8 +159,8 @@ function Terminal:close()
 end
 
 ---Toggle terminal window
----@param layout table?
----@param force boolean?
+---@param layout? table
+---@param force? boolean
 function Terminal:toggle(layout, force)
     if next(self:get_current_tab_windows()) then
         self:close()
@@ -174,8 +174,8 @@ function Terminal:kill()
     if not self:is_attached() then
         return
     end
-    local confirm = vim.fn.input(string.format("Terminal: Kill terminal %s? [y/n]: ", self.title))
-    if not confirm:match("^[yY][eE]?[sS]?$") then
+    local ok, confirm = pcall(vim.fn.input, string.format("Terminal: Kill terminal %s? [y/n]: ", self.title))
+    if not ok or not confirm:match("^[yY][eE]?[sS]?$") then
         return
     end
     self:close()
