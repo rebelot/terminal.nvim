@@ -219,9 +219,12 @@ end
 function Terminal:on_term_close(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
     local term = active_terminals[jobid]
+    local bufnr = term.bufnr
     if term.autoclose then
         term:close()
-        vim.api.nvim_buf_delete(term.bufnr, { force = true })
+        vim.schedule(function()
+            vim.api.nvim_buf_delete(bufnr, { force = false })
+        end)
     end
     term.bufnr = nil
     term.jobid = nil
