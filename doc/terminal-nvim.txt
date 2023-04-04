@@ -314,6 +314,13 @@ TERMSETTARGET
 
 Set terminal with [count] index as target for terminal actions.
 
+
+TERMMOVE
+
+:[count]TermMove [open_cmd]
+
+Permanently change the terminal layout
+
 ------------------------------------------------------------------------------
 
 TERMINAL OBJECTS                *terminal-nvim-terminal.nvim-terminal-objects*
