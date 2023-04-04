@@ -332,6 +332,12 @@ Send [text] to terminal with [count] index.
 
 Set terminal with [count] index as target for terminal actions.
 
+#### TermMove
+
+:[count]TermMove [open_cmd]
+
+Permanently change the terminal layout
+
 ---
 
 ## Terminal objects

@@ -80,3 +80,11 @@ end, {
     count = true,
     desc = "Terminal: Set target terminal",
 })
+
+command("TermMove", function(args)
+    terminal.move(args.count, { open_cmd = args.args })
+end, {
+    count = true,
+    nargs = "?",
+    desc = "Terminal: change terminal layout"
+})
