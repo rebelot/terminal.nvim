@@ -34,7 +34,7 @@ end
 
 ---Get the index of a given terminal within the sorted active_terminals list
 ---@param term Terminal
----@return integer
+---@return integer|nil
 function mt:get_term_index(term)
     local terminals = self:get_sorted_terminals()
     for i, t in ipairs(terminals) do
