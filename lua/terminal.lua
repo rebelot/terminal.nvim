@@ -238,4 +238,17 @@ function M.get_current_term()
     return term
 end
 
+---Change the layout of the selected terminal
+---@param index? integer 
+---@param layout table 
+function M.move(index, layout)
+    index = (index and index ~= 0) and index or nil
+    local term = get_target_terminal(index, true, false)
+    if term then
+        term.layout = layout
+        term:close()
+        term:open()
+    end
+end
+
 return M

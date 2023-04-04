@@ -101,6 +101,14 @@ function M.close()
     with_count(terminal.close)
 end
 
+function M.move(layout)
+    return function()
+        with_count(function(count)
+            terminal.move(count, layout)
+        end)
+    end
+end
+
 function M.kill()
     with_count(terminal.kill)
 end

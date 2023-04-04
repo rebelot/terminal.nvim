@@ -12,6 +12,58 @@
 
 # Terminal.nvim
 
+<!-- panvimdoc-ignore-start -->
+<!--toc:start-->
+- [Terminal.nvim](#terminalnvim)
+  - [Installation](#installation)
+  - [Config](#config)
+      - [config.layout](#configlayout)
+        - [config.layout.open_cmd:](#configlayoutopencmd)
+        - [Float Layout:](#float-layout)
+      - [config.cmd](#configcmd)
+      - [config.autoclose](#configautoclose)
+  - [Functions](#functions)
+      - [setup()](#setup)
+      - [set_target()](#settarget)
+      - [cycle()](#cycle)
+      - [run()](#run)
+      - [open()](#open)
+      - [close()](#close)
+      - [kill()](#kill)
+      - [toggle()](#toggle)
+      - [send()](#send)
+      - [current_term_index()](#currenttermindex)
+      - [current_term()](#currentterm)
+  - [Keymaps](#keymaps)
+        - [Example mappings](#example-mappings)
+  - [Commands](#commands)
+      - [TermRun](#termrun)
+      - [TermOpen](#termopen)
+      - [TermClose](#termclose)
+      - [TermToggle](#termtoggle)
+      - [TermKill](#termkill)
+      - [TermSend](#termsend)
+      - [TermSetTarget](#termsettarget)
+  - [Terminal objects](#terminal-objects)
+      - [terminal:new()](#terminalnew)
+      - [terminal:open()](#terminalopen)
+      - [terminal:close()](#terminalclose)
+      - [terminal:toggle()](#terminaltoggle)
+      - [terminal:kill()](#terminalkill)
+      - [terminal:send()](#terminalsend)
+    - [Named Terminals](#named-terminals)
+        - [IPython:](#ipython)
+        - [Lazygit:](#lazygit)
+        - [Htop:](#htop)
+  - [Tips](#tips)
+        - [Useful terminal mappings](#useful-terminal-mappings)
+        - [Auto insert mode](#auto-insert-mode)
+        - [terminal window highlight](#terminal-window-highlight)
+        - [Statusline integration](#statusline-integration)
+  - [Donate](#donate)
+<!--toc:end-->
+<!-- panvimdoc-ignore-end -->
+
 ## Installation
 
 ```lua
@@ -186,14 +238,21 @@ Get the index of the terminal in the current window.
 
 Get the terminal object displayed in the current window.
 
+#### move()
+
+`move(index, layout)`
+
+Change the layout of the selected terminal, permanently.
+
 ---
 
 ## Keymaps
 
-Keymaps can be set up using the API defined in `terminal.mappings.`
-When called with parameters, each keymap API function returns a
-pre-loaded function with given parameters. Otherwise, the corresponding
-terminal function will be called with default arguments.
+Keymaps can be set up using the API defined in `terminal.mappings.` When called
+with arguments, each keymap API function returns a pre-loaded function with
+given arguments. Otherwise, the corresponding terminal function will be called
+with default arguments. All keymap functions support a count by default, so
+that, for instance, `2<leader>to` will toggle the terminal with index #2.
 
 ##### Example mappings
 
@@ -207,6 +266,11 @@ vim.keymap.set("n", "<leader>tR", term_map.run(nil, { layout = { open_cmd = "ene
 vim.keymap.set("n", "<leader>tk", term_map.kill)
 vim.keymap.set("n", "<leader>t]", term_map.cycle_next)
 vim.keymap.set("n", "<leader>t[", term_map.cycle_prev)
+vim.keymap.set("n", "<leader>tl", term_map.move({ open_cmd = "belowright vnew" }))
+vim.keymap.set("n", "<leader>tL", term_map.move({ open_cmd = "botright vnew" }))
+vim.keymap.set("n", "<leader>th", term_map.move({ open_cmd = "belowright new" }))
+vim.keymap.set("n", "<leader>tH", term_map.move({ open_cmd = "botright new" }))
+vim.keymap.set("n", "<leader>tf", term_map.move({ open_cmd = "float" }))
 ```
 
 ---
