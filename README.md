@@ -13,6 +13,8 @@
 # Terminal.nvim
 
 <!-- panvimdoc-ignore-start -->
+
+
 <!--toc:start-->
 - [Terminal.nvim](#terminalnvim)
   - [Installation](#installation)
@@ -34,6 +36,7 @@
       - [send()](#send)
       - [current_term_index()](#currenttermindex)
       - [current_term()](#currentterm)
+      - [move()](#move)
   - [Keymaps](#keymaps)
         - [Example mappings](#example-mappings)
   - [Commands](#commands)
@@ -62,6 +65,8 @@
         - [Statusline integration](#statusline-integration)
   - [Donate](#donate)
 <!--toc:end-->
+
+
 <!-- panvimdoc-ignore-end -->
 
 ## Installation
