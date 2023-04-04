@@ -219,6 +219,9 @@ end
 function Terminal:on_term_close(bufnr)
     local jobid = vim.b[bufnr].terminal_job_id
     local term = active_terminals[jobid]
+    if not term then
+        return
+    end
     local bufnr = term.bufnr
     if term.autoclose then
         term:close()
