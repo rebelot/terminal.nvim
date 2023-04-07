@@ -11,8 +11,8 @@
 # Terminal.nvim
 
 <!--toc:start-->
-
 - [Terminal.nvim](#terminalnvim)
+  - [Features](#features)
   - [Installation](#installation)
   - [Setup](#setup)
     - [Default config](#default-config)
@@ -31,7 +31,18 @@
     - [terminal window highlight](#terminal-window-highlight)
     - [Statusline integration](#statusline-integration)
   - [Donate](#donate)
-  <!--toc:end-->
+<!--toc:end-->
+
+## Features
+
+- Super lightweight
+- The API/Commands provided by the `terminal.nvim` will will affect any.
+  terminal, whether you spawn it "manually" (`:term`), using `terminal.nvim`, or via any
+  other plugin.
+- Persistent and named terminals.
+- Easily toggle or cycle terminals.
+- Change layout on the fly (floating layout included).
+- Useful mappings to manage REPL-like terminals.
 
 ## Installation
 
