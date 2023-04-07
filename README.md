@@ -36,8 +36,8 @@
 ## Features
 
 - Super lightweight
-- The API/Commands provided by the `terminal.nvim` will will affect any.
-  terminal, whether you spawn it "manually" (`:term`), using `terminal.nvim`, or via any
+- The API/Commands provided by the `terminal.nvim` will affect any terminal,
+  whether you spawn it "manually" (`:term`), using `terminal.nvim`, or via any
   other plugin.
 - Persistent and named terminals.
 - Easily toggle or cycle terminals.
