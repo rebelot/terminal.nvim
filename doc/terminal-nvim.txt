@@ -3,25 +3,25 @@
 ==============================================================================
 Table of Contents                            *terminal-nvim-table-of-contents*
 
-1. Terminal.nvim                                               |terminal.nvim|
-  - Installation                                  |terminal.nvim-installation|
-  - Setup                                                |terminal.nvim-setup|
-  - API                                                    |terminal.nvim-API|
-  - Keymaps                                            |terminal.nvim-keymaps|
-  - Commands                                          |terminal.nvim-commands|
-  - Terminal objects                          |terminal.nvim-terminal-objects|
-  - Tips                                                  |terminal.nvim-tips|
-  - Donate                                              |terminal.nvim-donate|
+1. terminal-nvim                                               |terminal-nvim|
+  - Installation                                  |terminal-nvim-installation|
+  - Setup                                                |terminal-nvim-setup|
+  - API                                                    |terminal-nvim-API|
+  - Keymaps                                            |terminal-nvim-keymaps|
+  - Commands                                          |terminal-nvim-commands|
+  - Terminal objects                          |terminal-nvim-terminal-objects|
+  - Tips                                                  |terminal-nvim-tips|
+  - Donate                                              |terminal-nvim-donate|
 
 ==============================================================================
-1. Terminal.nvim                                               *terminal.nvim*
+1. terminal-nvim                                               *terminal-nvim*
 
 
-INSTALLATION                                      *terminal.nvim-installation*
+INSTALLATION                                      *terminal-nvim-installation*
 
 >lua
     use({
-        'rebelot/terminal.nvim',
+        'rebelot/terminal-nvim',
         config = function()
             require("terminal").setup()
         end
@@ -30,7 +30,7 @@ INSTALLATION                                      *terminal.nvim-installation*
 
 ------------------------------------------------------------------------------
 
-CONFIG                                                   *terminal.nvim-setup*
+CONFIG                                                   *terminal-nvim-setup*
 
 >lua
     require("terminal").setup(<config?>)
@@ -74,7 +74,7 @@ DEFAULT CONFIG
 
 ------------------------------------------------------------------------------
 
-API                                                        *terminal.nvim-API*
+API                                                        *terminal-nvim-API*
 
 
 - `set_target(index)`:
@@ -152,7 +152,7 @@ API                                                        *terminal.nvim-API*
 
 ------------------------------------------------------------------------------
 
-KEYMAPS                                                *terminal.nvim-keymaps*
+KEYMAPS                                                *terminal-nvim-keymaps*
 
 Keymaps can be set up using the API defined in `terminal.mappings`. When
 called with arguments, each keymap API function returns a pre-loaded function
@@ -216,7 +216,7 @@ EXAMPLE MAPPINGS
 
 ------------------------------------------------------------------------------
 
-COMMANDS                                              *terminal.nvim-commands*
+COMMANDS                                              *terminal-nvim-commands*
 
 
 TERMRUN
@@ -263,7 +263,7 @@ TERMRUN
 
 ------------------------------------------------------------------------------
 
-TERMINAL OBJECTS                              *terminal.nvim-terminal-objects*
+TERMINAL OBJECTS                              *terminal-nvim-terminal-objects*
 
 
 `Terminal` objects support the following methods:
@@ -303,7 +303,7 @@ TERMINAL OBJECTS                              *terminal.nvim-terminal-objects*
   - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
 
-NAMED TERMINALS ~
+NAMED TERMINALS  
 
 
 IPYTHON:
@@ -365,7 +365,7 @@ HTOP:
 
 ------------------------------------------------------------------------------
 
-TIPS                                                      *terminal.nvim-tips*
+TIPS                                                      *terminal-nvim-tips*
 
 
 USEFUL TERMINAL MAPPINGS
@@ -408,7 +408,7 @@ index and display it within the statusline.
 
 ==============================================================================
 
-DONATE                                                  *terminal.nvim-donate*
+DONATE                                                  *terminal-nvim-donate*
 
 https://img.shields.io/badge/Donate-PayPal-green.svg
 
