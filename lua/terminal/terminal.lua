@@ -4,14 +4,6 @@ local active_terminals = require("terminal.active_terminals")
 
 -- TODO!!!: filetype/bufname/project_marker jobs
 
-local config
-
-local function get_config()
-    if not config then
-        config = require("terminal").get_config()
-    end
-end
-
 ---@class Terminal
 ---@field layout table
 ---@field bufnr number
@@ -34,11 +26,8 @@ local Terminal = {
 ---@param term nil | table
 ---@return Terminal
 function Terminal:new(term)
-    get_config()
-    term = term or {}
-    term.layout = term.layout or config.layout
-    term.cmd = term.cmd or config.cmd
-    term.autoclose = term.autoclose or config.autoclose
+    local config = require("terminal").config
+    term = vim.tbl_deep_extend("force", config, term or {})
     setmetatable(term, { __index = self })
     return term
 end
@@ -99,7 +88,7 @@ function Terminal:get_windows()
 end
 
 ---Get the terminal's current index within the sorted active_terminals list
----@return number
+---@return number|nil
 function Terminal:get_index()
     return active_terminals:get_term_index(self)
 end
@@ -130,7 +119,7 @@ function Terminal:open(layout, force)
         vim.api.nvim_set_current_win(winid)
         return
     end
-    layout = layout or self.layout
+    layout = vim.tbl_deep_extend("force", self.layout, layout or {})
     local new_bufnr, new_winid = ui.make_buf_and_win(layout)
 
     if not self:is_attached() then

@@ -34,14 +34,8 @@ local default_config = {
     autoclose = false,
 }
 
-local _config = {}
-
-function M.get_config()
-    return vim.tbl_deep_extend("force", _config, {})
-end
-
 function M.setup(config)
-    _config = vim.tbl_deep_extend("force", default_config, config or {})
+    M.config = vim.tbl_deep_extend("force", default_config, config or {})
     require("terminal.commands")
 
     init_autocmds()
