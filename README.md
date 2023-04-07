@@ -8,66 +8,30 @@
 </p>
 <p align="center">The Neovim Terminal Manager</p>
 
-<!-- panvimdoc-ignore-end -->
-
 # Terminal.nvim
 
-<!-- panvimdoc-ignore-start -->
-
-
 <!--toc:start-->
+
 - [Terminal.nvim](#terminalnvim)
   - [Installation](#installation)
-  - [Config](#config)
-      - [config.layout](#configlayout)
-        - [config.layout.open_cmd:](#configlayoutopencmd)
-        - [Float Layout:](#float-layout)
-      - [config.cmd](#configcmd)
-      - [config.autoclose](#configautoclose)
-  - [Functions](#functions)
-      - [setup()](#setup)
-      - [set_target()](#settarget)
-      - [cycle()](#cycle)
-      - [run()](#run)
-      - [open()](#open)
-      - [close()](#close)
-      - [kill()](#kill)
-      - [toggle()](#toggle)
-      - [send()](#send)
-      - [current_term_index()](#currenttermindex)
-      - [current_term()](#currentterm)
-      - [move()](#move)
+  - [Setup](#setup)
+    - [Default config](#default-config)
+  - [API](#api)
   - [Keymaps](#keymaps)
-        - [Example mappings](#example-mappings)
+    - [Example mappings](#example-mappings)
   - [Commands](#commands)
-      - [TermRun](#termrun)
-      - [TermOpen](#termopen)
-      - [TermClose](#termclose)
-      - [TermToggle](#termtoggle)
-      - [TermKill](#termkill)
-      - [TermSend](#termsend)
-      - [TermSetTarget](#termsettarget)
   - [Terminal objects](#terminal-objects)
-      - [terminal:new()](#terminalnew)
-      - [terminal:open()](#terminalopen)
-      - [terminal:close()](#terminalclose)
-      - [terminal:toggle()](#terminaltoggle)
-      - [terminal:kill()](#terminalkill)
-      - [terminal:send()](#terminalsend)
-    - [Named Terminals](#named-terminals)
-        - [IPython:](#ipython)
-        - [Lazygit:](#lazygit)
-        - [Htop:](#htop)
+    - [Named Terminals Examples](#named-terminals-examples)
+      - [IPython:](#ipython)
+      - [Lazygit:](#lazygit)
+      - [Htop:](#htop)
   - [Tips](#tips)
-        - [Useful terminal mappings](#useful-terminal-mappings)
-        - [Auto insert mode](#auto-insert-mode)
-        - [terminal window highlight](#terminal-window-highlight)
-        - [Statusline integration](#statusline-integration)
+    - [Useful terminal mappings](#useful-terminal-mappings)
+    - [Auto insert mode](#auto-insert-mode)
+    - [terminal window highlight](#terminal-window-highlight)
+    - [Statusline integration](#statusline-integration)
   - [Donate](#donate)
-<!--toc:end-->
-
-
-<!-- panvimdoc-ignore-end -->
+  <!--toc:end-->
 
 ## Installation
 
@@ -82,9 +46,16 @@ use({
 
 ---
 
-## Config
+## Setup
 
-Default config
+```lua
+require("terminal").setup(<config?>)
+```
+
+Set up the plugin with the prvided `config` table (optional).
+A call to this function is always required.
+
+### Default config
 
 ```lua
 {
@@ -94,172 +65,124 @@ Default config
 }
 ```
 
-#### config.layout
+- **`config.layout`**: Specify the layout of the terminal window.
 
-Specify the layout of the terminal window.
+  - Type: `table`
+  - Default: `{ open_cmd = "botright new" }`
 
-Type: `table`
+    `open_cmd` is the Vim command used to create the new buffer and window.
+    If set to `"float"`, the terminal will be opened in a new floating window.
+    When `open_cmd = "float"`, `layout.height` and `layout.width`
+    are used to determine the height (lines) and width (columns)
+    of the floating window.
+    Values `<= 1` are interpreted as percentage of screen space.
 
-Default: `{ open_cmd = "botright new" }`
+- **`config.cmd`**: Default command for new terminals
 
-##### config.layout.open_cmd:
+  - Type: `table|string` passed to `termopen` (`:h jobstart()`)
+  - Default: `{ vim.o.shell }`
 
-Vim command used to create the new buffer and window.
-
-##### Float Layout:
-
-When `open_cmd = "float"`, `layout.height` and `layout.width`
-are used to determine the height (lines) and width (columns)
-of the floating window.
-Values `<= 1` are interpreted as percentage of screen space.
-
-#### config.cmd
-
-Default command for new terminals
-
-Type: `table|string` passed to `termopen` (`:h jobstart()`)
-
-Default: `{ vim.o.shell }`
-
-#### config.autoclose
-
-Automatically close terminal window when the process exits (on `TermClose`).
-
-Type: `bool`
-
-Default: `false`
+- **`config.autoclose`**: Automatically close terminal window when the process exits (on `TermClose`).
+  - Type: `bool`
+  - Default: `false`
 
 ---
 
-## Functions
+## API
 
-#### setup()
+- **`set_target(index)`**:
 
-`setup(config)`
+  - Description: Set the `index` terminal as the target for other actions.
+  - Params:
+    - `index` (`integer`): Terminal index.
 
-Params:
+- **`cycle(step?)`**:
 
-- `config` (`table`): user configuration
+  - Description: Cycle between active terminals.
+  - Params:
+    - `step` (`integer`): Increment number for cycling (Defalut: `1`)
 
-Set up the plugin with user `config`.
-A call to this function is always required.
+- **`run(cmd?, opts?)`**:
 
-#### set_target()
+  - Description: Run a command in terminal with given options. If no command
+    is provided, user will be prompted to insert one;
+    If `cmd` is an empty string, `config.cmd` will be used.
+  - Params:
+    - `cmd` (`table|string`): command to be executed by the terminal.
+    - `opts` (`table`): options to be passed to `termopen`
 
-`set_target(index)`
+- **`open(index?, layout?, force?)`**:
 
-Params:
+  - Description: Open a terminal with given layout.
+  - Params:
+    - `index` (`integer`): terminal index
+    - `layout` (`table`): layout spec
+    - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
-- `index` (`integer`): Terminal index.
+- **`close(index?)`**:
 
-Set the `index` terminal as the target for other actions.
+  - Description: Close a terminal window.
+  - Params:
+    - `index`(`integer`): terminal index
 
-#### cycle()
+- **`kill(index?)`**
 
-`cycle(step)`
+  - Description: Kill a terminal job and close its window.
+  - Params:
+    - `index` (`integer`): terminal index
 
-Params:
+- **`toggle(index?, layout?, force?)`**
 
-- `step` (`integer`): Increment number for cycling.
+  - Description: Open a terminal with given layout, or close its window
+    if it's visible in the current tab (unless `force` is `true`).
+  - Params:
 
-Cycle between active terminals.
+    - `index` (`integer`): terminal index
+    - `layout` (`table`): layout spec
+    - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
-#### run()
+- **`send(index?, data)`**:
 
-`run(cmd?, opts?)`
+  - Description: Send text to the terminal.
+  - Params:
+    - `index` (`integer`): terminal index
+    - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
-Params:
+- **`current_term_index()`**:
 
-- `cmd` (`table|string`): command to be executed by the terminal.
-- `opts` (`table`): options to be passed to `termopen`
+  - Description: Get the index of the terminal in the current window.
 
-Run a command in terminal with given options. If no command
-is provided, user will be prompted to insert one;
-If `cmd` is an empty string, `config.cmd` will be used.
+- **`get_current_term()`**:
 
-#### open()
+  - Description: Get the terminal object displayed in the current window.
 
-`open(index, layout, force)`
+- **`move(index?, layout)`**:
 
-Params:
-
-- `index`(`integer`): terminal index
-- `layout` (`table`): layout spec
-- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
-
-Open a terminal with given layout.
-
-#### close()
-
-`close(index)`
-
-Params:
-
-- `index`(`integer`): terminal index
-
-Close a terminal window.
-
-#### kill()
-
-`kill(index)`
-
-Params:
-
-- `index`(`integer`): terminal index
-
-Kill a terminal job and close its window.
-
-#### toggle()
-
-`toggle(index, layout, force)`
-
-Params:
-
-- `index`(`integer`): terminal index
-- `layout` (`table`): layout spec
-- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
-
-Open a terminal with given layout, or close its window
-if it's visible in the current tab (unless `force` is `true`).
-
-#### send()
-
-`send(index, data)`
-
-Params:
-
-- `index`(`integer`): terminal index
-- `data` (`table|string`): Text to be sent to the terminal via `chansend()`
-
-#### current_term_index()
-
-`current_term_index()`
-
-Get the index of the terminal in the current window.
-
-#### current_term()
-
-`get_current_term()`
-
-Get the terminal object displayed in the current window.
-
-#### move()
-
-`move(index, layout)`
-
-Change the layout of the selected terminal, permanently.
+  - Description: Change the layout of the selected terminal, permanently.
 
 ---
 
 ## Keymaps
 
-Keymaps can be set up using the API defined in `terminal.mappings.` When called
+Keymaps can be set up using the API defined in `terminal.mappings`. When called
 with arguments, each keymap API function returns a pre-loaded function with
 given arguments. Otherwise, the corresponding terminal function will be called
 with default arguments. All keymap functions support a count by default, so
 that, for instance, `2<leader>to` will toggle the terminal with index #2.
 
-##### Example mappings
+- `[count]operator_send {motion}`: Send text captured by `{motion}` to `[count]` terminal
+- `[count]["x]register_send`: Send text captured in register `"x` to `[count]` terminal
+- `[count]send[(data)]`: Send `data` to `[count]` terminal. May preload `send`.
+- `[count]cycle_next`: Cycle next `[count]` terminals.
+- `[cunt]cycle_prev`: Cycle previous `[count]` terminals.
+- `[count]toggle[(layout?, force?)]`: Toggle `[count]` terminal. May preload `toggle()`.
+- `[count]open[(layout?, force?)]`: Open `[count]` terminal. May preload `open()`.
+- `[count]close`: Close `[count]` terminal.
+- `[count]move[(layout)]`: Change the layout of `[count]` terminall. May preload `move()`.
+- `[count]kill`: Kill `[count]` terminal.
+- `run[(cmd?, opts?)]`: Runs a new job in terminal. May preload `run()`.
+
+### Example mappings
 
 ```lua
 local term_map = require("terminal.mappings")
@@ -282,132 +205,89 @@ vim.keymap.set("n", "<leader>tf", term_map.move({ open_cmd = "float" }))
 
 ## Commands
 
-#### TermRun
+- `:TermRun[!] command`
 
-:TermRun[!] [command]
+  Runs `command` in a new terminal. If `command` is empty, user will be prompted
+  to enter one, falling back to `config.cmd`. With `!`, the new terminal window
+  will replace the current buffer. Accepts `split` and `vertical` modifiers to
+  set the new terminal `layout.open_cmd`. (eg: `botright vertical TermRun ipython`).
 
-Run [command] in terminal. If command is empty, user will be prompted
-to enter one, falling back to `config.cmd`. With [!] the new terminal window
-will replace the current buffer. Accepts `split` and `vertical` modifiers to
-set the new terminal layout `open_cmd`. (eg: `botright vertical TermRun ipython`)
+- `:[count]TermOpen[!] [open_cmd]`
 
-#### TermOpen
+  Open terminal with `[count]` index and layout specified by `[open_cmd].`
+  With `!`, a new window will be created even if the terminal is already displayed in the current tab,
+  otherwise the terminal will be focused.
+  Also accepts `split` and `vertical` modifiers.
 
-:[count]TermOpen[!] [open_cmd]
+- `:[count]TermClose`
 
-Open terminal with [count] index and layout specified by [open_cmd].
-With [!], a new window will be created even if the terminal is already displayed in the current tab,
-otherwise the terminal will be focused.
-Also accepts `split` and `vertical` modifiers to specify `open_cmd`.
+  Close terminal with `[count]` index.
 
-#### TermClose
+- `:[count]TermToggle[!] [open_cmd]`
 
-:[count]TermClose
+  Toggle terminal with `[count]` index and layout specified by `[open_cmd].`
+  With `!`, a new window will be created even if the terminal is already displayed in the current tab.
+  Also accepts `split` and `vertical` modifiers.
 
-Close terminal with [count] index.
+- `:[count]TermKill`
 
-#### TermToggle
+  Kill terminal with `[count]` index.
 
-:[count]TermToggle[!] [open_cmd]
+- `:[count]TermSend [text]`
 
-Toggle terminal with [count] index and layout specified by [open_cmd].
-With [!], a new window will be created even if the terminal is already displayed in the current tab.
-Also accepts `split` and `vertical` modifiers to specify `open_cmd`.
+  Send `[text]` to terminal with `[count]` index.
 
-#### TermKill
+- `:[count]TermSetTarget`
 
-:[count]TermKill
+  Set terminal with `[count]` index as target for terminal actions.
 
-Kill terminal with [count] index.
+- `:[count]TermMove open_cmd`
 
-#### TermSend
-
-:[count]TermSend [text]
-
-Send [text] to terminal with [count] index.
-
-#### TermSetTarget
-
-:[count]TermSetTarget
-
-Set terminal with [count] index as target for terminal actions.
-
-#### TermMove
-
-:[count]TermMove [open_cmd]
-
-Permanently change the terminal layout
+  Permanently change the `[count]` terminal layout to the one specified by `open_cmd`
 
 ---
 
 ## Terminal objects
 
-#### terminal:new()
+`Terminal` objects support the following methods:
 
-`terminal:new(opts)`
+- `new(opts)`: Creates a new terminal object.
 
-Params:
+  - `opts` (`table`):
+    - `layout` (`table`): layout spec
+    - `cmd` (`table|string`): command to be executed by the terminal
+    - `autoclose` (`bool`): automatically close terminal window when the process exits
+    - `cwd` (`string|function->string|nil`): CWD of the terminal job.
+    - Other fields passed to `jobstart`:
+      - `clear_env`
+      - `env`
+      - `on_exit`
+      - `on_stdout`
+      - `on_stderr`
 
-- `opts` (`table`):
-  - layout (`table`): layout spec
-  - cmd (`table|string`): command to be executed by the terminal
-  - autoclose (`bool`): automatically close terminal window when the process exits
-  - cwd (`string|function->string|nil`): CWD of the terminal job.
-  - Other fields passed to `jobstart`:
-    - clear_env
-    - env
-    - on_exit
-    - on_stdout
-    - on_stderr
+- `open(layout?, force?)`: Open the terminal with given layout.
 
-#### terminal:open()
+  - `layout` (`table`): layout spec
+  - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
-`terminal:open(layout, force)`
+- `close()`: Closes the window displaying the terminal in the current tab.
 
-Params:
+- `toggle(layout?, force?)`:
+  Open the terminal with given layout, or close its window
+  if it's visible in the current tab (unless `force` is `true`).
 
-- `layout` (`table`): layout spec
-- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
+  - `layout` (`table`): layout spec
+  - `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
 
-Open the terminal with given layout.
+- `terminal:kill()`: Kill a terminal job and close its window.
 
-#### terminal:close()
+- `terminal:send(data)`:
+  Send text to terminal.
+  - `data` (`table|string`): Text to be sent to the terminal via `chansend()`
 
-`terminal:close()`
+### Named Terminals Examples
 
-Close the terminal window in the current tab.
-
-#### terminal:toggle()
-
-`terminal:toggle(layout, force)`
-
-Params:
-
-- `layout` (`table`): layout spec
-- `force` (`bool`): Force opening the terminal window even if it already visible in the current tab.
-
-Open the terminal with given layout, or close its window
-if it's visible in the current tab (unless `force` is `true`).
-
-#### terminal:kill()
-
-`terminal:kill()`
-
-Kill a terminal job and close its window.
-
-#### terminal:send()
-
-`terminal:send(data)`
-
-Params:
-
-- `data` (`table|string`): Text to be sent to the terminal via `chansend()`
-
-Send text to terminal.
-
-### Named Terminals
-
-##### IPython:
+#### IPython:
 
 ```lua
 local ipython = require("terminal").terminal:new({
@@ -434,7 +314,7 @@ vim.api.nvim_create_user_command("IPython", function()
 end, {})
 ```
 
-##### Lazygit:
+#### Lazygit:
 
 ```lua
 local lazygit = require("terminal").terminal:new({
@@ -449,7 +329,7 @@ vim.api.nvim_create_user_command("Lazygit", function(args)
 end, { nargs = "?" })
 ```
 
-##### Htop:
+#### Htop:
 
 ```lua
 local htop = require("terminal").terminal:new({
@@ -466,7 +346,7 @@ end, { nargs = "?" })
 
 ## Tips
 
-##### Useful terminal mappings
+### Useful terminal mappings
 
 ```vim
 tnoremap <c-\><c-\> <c-\><c-n>
@@ -476,7 +356,7 @@ tnoremap <c-k> <c-\><c-n><c-w>k
 tnoremap <c-l> <c-\><c-n><c-w>l
 ```
 
-##### Auto insert mode
+### Auto insert mode
 
 ```lua
 vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
@@ -488,7 +368,7 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
 })
 ```
 
-##### terminal window highlight
+### terminal window highlight
 
 ```lua
 vim.api.nvim_create_autocmd("TermOpen", {
@@ -496,9 +376,10 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 ```
 
-##### Statusline integration
+### Statusline integration
 
-Use `terminal.current_term_index()` to get the current terminal index and display it within the statusline.
+Use `require("terminal").current_term_index()` to get the current terminal
+index and display it within the statusline.
 
 ## Donate
 
