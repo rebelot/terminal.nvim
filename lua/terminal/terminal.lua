@@ -41,6 +41,7 @@ function Terminal:_spawn()
         cwd = type(self.cwd) == "function" and self:cwd() or self.cwd,
         clear_env = self.clear_env,
         env = self.env,
+        height = 4,
         on_exit = self.on_exit,
         on_stdout = self.on_stdout,
         on_stderr = self.on_stderr,
