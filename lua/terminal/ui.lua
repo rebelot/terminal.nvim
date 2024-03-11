@@ -1,29 +1,8 @@
 local M = {}
 
-local function percentbbox(h, w)
-    h, w = h or 0.8, w or 0.8
-    local row, col, height, width
-    if h <= 1 then
-        row = math.floor(vim.o.lines / 2 * (1 - h)) - 1
-        height = math.floor(vim.o.lines * h)
-    else
-        row = math.floor(vim.o.lines / 2 - h / 2) - 1
-        height = h
-    end
-
-    if w <= 1 then
-        col = math.floor(vim.o.columns / 2 * (1 - w))
-        width = math.floor(vim.o.columns * w)
-    else
-        col = math.floor(vim.o.columns / 2 - w / 2)
-        width = w
-    end
-    return row, col, height, width
-end
-
 local function make_buf_and_float_win(layout)
     local bufnr = vim.api.nvim_create_buf(true, false)
-    local row, col, height, width = percentbbox(layout.height, layout.width)
+    local row, col, height, width = M.percentbbox(layout.height, layout.width)
 
     local win_opts = {
         relative = "editor",
