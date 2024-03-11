@@ -11,6 +11,8 @@ local active_terminals = require("terminal.active_terminals")
 ---@field autoclose boolean
 ---@field cmd string|table
 ---@field clear_env boolean
+---@field width number
+---@field height number
 ---@field cwd string | function
 ---@field env table
 ---@field on_exit function
@@ -57,12 +59,14 @@ function Terminal:_spawn()
     --     end,
     -- })
     local jobid = vim.fn.termopen(cmd, opts)
-    vim.api.nvim_win_set_height(0, 4)
     -- on_term_open runs now
     if jobid > 0 then
         self.jobid = jobid
         self.bufnr = vim.api.nvim_get_current_buf()
         self.title = vim.b.term_title
+        local _, _, height, width = utils.percentbbox(self.height, self.width)
+        vim.api.nvim_win_set_width(0, height)
+        vim.api.nvim_win_set_height(0, width)
         active_terminals[jobid] = self
         return true
     end
