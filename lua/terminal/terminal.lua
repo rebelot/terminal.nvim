@@ -72,10 +72,7 @@ end
 ---Return true if the terminal was spawned (has a jobid and bufnr)
 ---@return boolean
 function Terminal:is_attached()
-    if not (self.bufnr and self.jobid) then
-        return false
-    end
-    return true
+    return self.bufnr and self.jobid
 end
 
 ---Get the ids of windows displaying the terminal
