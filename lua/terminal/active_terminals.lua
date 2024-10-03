@@ -32,6 +32,14 @@ function mt:get_current_buf_terminal()
     -- end
 end
 
+function mt:get_term_by_bufnr(bufnr)
+    for _, idx in ipairs(vim.tbl_keys(self)) do
+        if self[idx].bufnr == bufnr then
+            return idx, self[idx]
+        end
+    end
+end
+
 ---Get the index of a given terminal within the sorted active_terminals list
 ---@param term Terminal
 ---@return integer|nil

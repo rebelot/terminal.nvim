@@ -203,12 +203,12 @@ end
 ---autocommand to ensure closed terminals are always removed from active_terminals
 ---@param bufnr integer
 function Terminal:on_term_close(bufnr)
-    local jobid = vim.b[bufnr].terminal_job_id
-    local term = active_terminals[jobid]
+    local idx, term = active_terminals:get_term_by_bufnr(bufnr)
+    print("on_term_close", bufnr, idx, term)
+    print('active_terminals', vim.inspect(active_terminals))
     if not term then
         return
     end
-    local bufnr = term.bufnr
     if term.autoclose then
         term:close()
         vim.schedule(function()
@@ -217,7 +217,7 @@ function Terminal:on_term_close(bufnr)
     end
     term.bufnr = nil
     term.jobid = nil
-    active_terminals[jobid] = nil
+    active_terminals[idx] = nil
 end
 
 return Terminal
