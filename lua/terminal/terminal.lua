@@ -204,8 +204,6 @@ end
 ---@param bufnr integer
 function Terminal:on_term_close(bufnr)
     local idx, term = active_terminals:get_term_by_bufnr(bufnr)
-    print("on_term_close", bufnr, idx, term)
-    print('active_terminals', vim.inspect(active_terminals))
     if not term then
         return
     end
