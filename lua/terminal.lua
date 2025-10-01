@@ -32,6 +32,7 @@ local default_config = {
     layout = { open_cmd = "botright new" },
     cmd = { vim.o.shell },
     autoclose = false,
+    startinsert = false,
 }
 
 function M.setup(config)
@@ -233,8 +234,8 @@ function M.get_current_term()
 end
 
 ---Change the layout of the selected terminal
----@param index? integer 
----@param layout table 
+---@param index? integer
+---@param layout table
 function M.move(index, layout)
     index = (index and index ~= 0) and index or nil
     local term = get_target_terminal(index, true, false)

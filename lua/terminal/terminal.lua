@@ -9,6 +9,7 @@ local active_terminals = require("terminal.active_terminals")
 ---@field bufnr number
 ---@field job_id number
 ---@field autoclose boolean
+---@field startinsert boolean
 ---@field cmd string|table
 ---@field clear_env boolean
 ---@field cwd string | function
@@ -20,6 +21,7 @@ local Terminal = {
     layout = { open_cmd = "botright new" },
     cmd = { vim.o.shell, "-l" },
     autoclose = false,
+    startinsert = false,
 }
 
 ---Instantiate a new terminal
@@ -127,6 +129,9 @@ function Terminal:open(layout, force)
     else
         vim.api.nvim_win_set_buf(new_winid, self.bufnr)
         vim.api.nvim_buf_delete(new_bufnr, { force = true })
+    end
+    if self.startinsert then
+        vim.cmd.startinsert()
     end
 end
 
